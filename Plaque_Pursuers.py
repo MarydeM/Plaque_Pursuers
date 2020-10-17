@@ -67,8 +67,7 @@ class Gui(Frame):
                           = self.columnspan, sticky = self.sticky)
         #pack the GUI
         self.pack(fill = BOTH, expand=1)
-        
-        
+
      #borrowed this from The Reckoner for reference   
 # img = PhotoImage(file="images/rpr.gif")
 #         button = Button(self, bg="white", image=img, borderwidth = 0, \
@@ -76,11 +75,13 @@ class Gui(Frame):
 #                         command = lambda: self.process(")"))
 #         button.image = img #sets button image's name
 #         button.grid(row = 1, column = 1, sticky = N+S+E+W)
-    
+
 #Creates the main menu
 class MainMenu(Gui):
-    pass
-    
+
+    def __init__(self, parent):
+        pass
+        
 #Plays the card matching memory game
 class Memory(Gui):
     pass
@@ -101,13 +102,16 @@ class Simon(Gui):
 ################
 # Main Program #
 ################
+#window resolution
+WIDTH, HEIGHT = 800, 600 #800x600 is Fullscreen on a rasp. pi
 
 # create the window
 window = Tk()
-
+#set the window WIDTHxHEIGHT
+window.geometry("{}x{}".format(WIDTH, HEIGHT))
 # set the window title
 window.title("The Plaque Pursuers")
 # generate the GUI
-p = MainGUI(window)
+p = MainMenu(window)
 # display the GUI and wait for user interaction
 window.mainloop()
