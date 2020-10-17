@@ -9,8 +9,7 @@ from tkinter import *
 class Gui(Frame):
     
     #main Frame Constructor
-    def __init__(self, parent, row, column, columnspan, rowspan, \
-                 sticky = N+S+E+W):
+    def __init__(self, parent, row, column, columnspan, rowspan, sticky = N+S+E+W):
         Frame.__init__(self, parent)
         self.row = row
         self.column = column
@@ -49,7 +48,7 @@ class Gui(Frame):
         return self._rowspan 
                                       
     @rowspan.setter                      
-    def rowspann(self, value):            
+    def rowspan(self, value):            
         self._rowspan = value
     
     @property
@@ -80,7 +79,7 @@ class Gui(Frame):
 class MainMenu(Gui):
 
     def __init__(self, parent):
-        pass
+        super().__init__(parent, 4, 4, 4, 4)
         
 #Plays the card matching memory game
 class Memory(Gui):
