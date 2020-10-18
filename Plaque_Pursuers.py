@@ -1,5 +1,5 @@
 # Plaque Pursuers CSC 132 Final Project
-# Contributers: Chloe, Nathaniel, Mary
+# Contributers: Chloe, Mary
 # Last Updated: 10/21/2020
 ##############################################################################
 #Imports Gui libraries
@@ -9,8 +9,12 @@ from tkinter import *
 class Gui(Frame):
     
     #main Frame Constructor
-    def __init__(self, parent, row, column, columnspan, rowspan, sticky = N+S+E+W):
+    ###I tried to set "command" to lambda as default, but I kept getting syntax errors.
+    def __init__(self, parent, img, comnd, row, column, columnspan, \
+                 rowspan, sticky = N+S+E+W):
         Frame.__init__(self, parent)
+        self.img = img
+        self.comnd = comnd
         self.row = row
         self.column = column
         self.columnspan = columnspan
@@ -19,6 +23,22 @@ class Gui(Frame):
         self.setupGUI()
         
     #mutators and grabers
+    @property
+    def comnd(self):                   
+        return self._comnd    
+                                      
+    @comnd.setter                      
+    def comnd(self, value):            
+        self._comnd = value
+        
+    @property
+    def img(self):                   
+        return self._img         
+                                      
+    @img.setter                      
+    def img(self, value):            
+        self._img = value 
+    
     @property
     def row(self):                   
         return self._row           
@@ -62,24 +82,26 @@ class Gui(Frame):
     # sets up the GUI
     ###We need to add images and commands for buttons
     def setupGUI(self):
-        self.display.grid(row = self.row, column = self.column, columnspan \
-                          = self.columnspan, sticky = self.sticky)
-        #pack the GUI
+        img = PhotoImage(file = self.img)
+        button = Button(self, bg = "white", image = img, borderwidth = 0, \
+                        highlightthickness = 0, activebackground = "white",\
+                        command = self.comnd)
+        #sets button image's name
+        button.image = img
+        button.grid(row = self.row, column = self.column, rowspan = \
+                    self.rowspan, columnspan = self.columnspan, sticky = \
+                    self.sticky)
         self.pack(fill = BOTH, expand=1)
-
-     #borrowed this from The Reckoner for reference   
-# img = PhotoImage(file="images/rpr.gif")
-#         button = Button(self, bg="white", image=img, borderwidth = 0, \
-#                         highlightthickness = 0, activebackground = "white",\
-#                         command = lambda: self.process(")"))
-#         button.image = img #sets button image's name
-#         button.grid(row = 1, column = 1, sticky = N+S+E+W)
 
 #Creates the main menu
 class MainMenu(Gui):
 
     def __init__(self, parent):
-        super().__init__(parent, 4, 4, 4, 4)
+        super().__init__(parent, "images/test.png", self.hello, 4, 4, 1, 1)
+    
+    # test function
+    def hello(self):
+        print("hi, this is a test")
         
 #Plays the card matching memory game
 class Memory(Gui):
@@ -102,7 +124,8 @@ class Simon(Gui):
 # Main Program #
 ################
 #window resolution
-WIDTH, HEIGHT = 800, 600 #800x600 is Fullscreen on a rasp. pi
+#800x600 is Fullscreen on a rasp. pi
+WIDTH, HEIGHT = 800, 600
 
 # create the window
 window = Tk()
@@ -110,6 +133,8 @@ window = Tk()
 window.geometry("{}x{}".format(WIDTH, HEIGHT))
 # set the window title
 window.title("The Plaque Pursuers")
+#set main background
+window.image = PhotoImage(file="images/game_bg.png")
 # generate the GUI
 p = MainMenu(window)
 # display the GUI and wait for user interaction
