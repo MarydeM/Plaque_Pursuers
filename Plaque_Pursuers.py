@@ -10,16 +10,12 @@ class Gui(Frame):
     
     #main Frame Constructor
     ###I tried to set "command" to lambda as default, but I kept getting syntax errors.
-    def __init__(self, parent, img, comnd, row, column, columnspan, \
-                 rowspan, sticky = N+S+E+W):
+    def __init__(self, parent, img, comnd, xcoord, ycoord):
         Frame.__init__(self, parent)
         self.img = img
         self.comnd = comnd
-        self.row = row
-        self.column = column
-        self.columnspan = columnspan
-        self.rowspan = rowspan
-        self.sticky = sticky
+        self.xcoord = xcoord
+        self.ycoord = ycoord
         self.setupGUI()
         
     #mutators and grabers
@@ -40,66 +36,41 @@ class Gui(Frame):
         self._img = value 
     
     @property
-    def row(self):                   
-        return self._row           
+    def xcoord(self):                   
+        return self._xcoord         
                                       
-    @row.setter                      
-    def row(self, value):            
-        self._row = value
+    @xcoord.setter                      
+    def xcoord(self, value):            
+        self._xcoord = value
     
     @property
-    def column(self):                   
-        return self._column         
+    def ycoord(self):                   
+        return self._ycoord      
                                       
-    @column.setter                      
-    def column(self, value):            
-        self._column = value
+    @ycoord.setter                      
+    def ycoord(self, value):            
+        self._ycoord = value
         
-    @property
-    def columnspan(self):                   
-        return self._columnspan      
-                                      
-    @columnspan.setter                      
-    def columnspan(self, value):            
-        self._columnspan = value
-    
-    @property
-    def rowspan(self):                   
-        return self._rowspan 
-                                      
-    @rowspan.setter                      
-    def rowspan(self, value):            
-        self._rowspan = value
-    
-    @property
-    def sticky(self):                   
-        return self._sticky
-                                      
-    @sticky.setter                      
-    def sticky(self, value):            
-        self._sticky = value
-        
-    # sets up the GUI
-    ###We need to add images and commands for buttons
+    # sets up indovidual buttons
     def setupGUI(self):
         img = PhotoImage(file = self.img)
+        #creates button and gives it functionality
         button = Button(self, bg = "white", image = img, borderwidth = 0, \
                         highlightthickness = 0, activebackground = "white",\
                         command = self.comnd)
         #sets button image's name
         button.image = img
-        button.grid(row = self.row, column = self.column, rowspan = \
-                    self.rowspan, columnspan = self.columnspan, sticky = \
-                    self.sticky)
+        #places button using x and y coordinates
+        button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
         self.pack(fill = BOTH, expand=1)
 
 #Creates the main menu
 class MainMenu(Gui):
 
     def __init__(self, parent):
-        super().__init__(parent, "images/test.png", self.hello, 4, 4, 1, 1)
+        super().__init__(parent, "images/test.png", self.hello, 400, 300)
     
-    # test function
+    ### test function
     def hello(self):
         print("hi, this is a test")
         
@@ -119,6 +90,9 @@ class Pipes(Gui):
 class Simon(Gui):
     pass
 
+#call this class when a game is won
+class Candy:
+    pass
 
 ################
 # Main Program #
@@ -133,9 +107,16 @@ window = Tk()
 window.geometry("{}x{}".format(WIDTH, HEIGHT))
 # set the window title
 window.title("The Plaque Pursuers")
-#set main background
-window.image = PhotoImage(file="images/game_bg.png")
+
+#Set background image.
+###I have a higher resolution image, but I could not figure out how to shrink it to the window size
+background_image = PhotoImage(file = "images/game_bg.png")
+background_label = Label(window, image = background_image)
+background_label.place(x = 0, y = 0, relwidth=1, relheight=1)
+
+###generating the gui covers up the background. Fix needed
 # generate the GUI
 p = MainMenu(window)
+p.pack()
 # display the GUI and wait for user interaction
 window.mainloop()
