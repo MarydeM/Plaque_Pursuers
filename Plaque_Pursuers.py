@@ -67,39 +67,73 @@ class Gui(Canvas):
         button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
 
 #Creates the main menu
-class MainMenu(Gui):
+class MainMenu():
 
     def __init__(self):
-        super().__init__(self, img, comnd, xcoord, ycoord)
         self.make_buttons()
     
     #creates buttons
     def make_buttons(self):
-        B1 = MainMenu("images/test.png", self.hello, 100, 300)
-        B1 = MainMenu("images/test.png", self.hello, 700, 300)
+        B1 = Gui("images/test.png", self.hello, 150, 300)
+        B2 = Gui("images/test.png", self.hi, 650, 300)
     
     ### test function
     def hello(self):
+        ### These functions can be used to call the class assigned to the button
+        ### Ex: the Memory game button would call the memory class
         print("hi, this is a test")
         
+    def hi(self):
+        hi = Pipes()
+        
 #Plays the card matching memory game
-class Memory(Gui):
-    pass
-
-#Plays the picture unscrambling game
-class PictureScramble(Gui):
-    pass
+class Memory():
+    
+    def __init__(self):
+        self.make_buttons()
+    
+    #creates buttons
+    def make_buttons(self):
+        pass
+    
+    #class functions
+    def example_funt(self):
+        pass
 
 #Plays the pipes puzzle game
-class Pipes(Gui):
-    pass
+class Pipes():
+    
+    def __init__(self):
+        self.make_buttons()
+        self.forget()
+        
+    def forget(self):
+        window.pac_forget()
+    
+    #creates buttons
+    def make_buttons(self):
+        pass
+    
+    #class functions
+    def example_funt(self):
+        pass
 
 #Plays the simon memory game
-class Simon(Gui):
-    pass
+class Simon():
+    
+    def __init__(self):
+        self.make_buttons()
+    
+    #creates buttons
+    def make_buttons(self):
+        pass
+    
+    #class functions
+    def example_funt(self):
+        pass
 
 #call this class when a game is won
-class Candy:
+class Candy():
     pass
 
 ################
@@ -126,7 +160,7 @@ background_image = PhotoImage(file = "images/game_bg.png")
 p.create_image(0, 0, anchor = NW, image = background_image)
 
 #Set up main menue
-MainMenu()
+menu = MainMenu()
 
 # display the GUI and wait for user interaction
 window.mainloop()
