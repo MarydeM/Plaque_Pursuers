@@ -1,17 +1,20 @@
 # Plaque Pursuers CSC 132 Final Project
 # Contributers: Chloe, Mary
-# Last Updated: 10/21/2020
+# Last Updated: 10/22/2020
 ##############################################################################
+
+### the three pound signs means it is a note to delete later ###
+
 #Imports Gui libraries
 from tkinter import *
 
 #Initializes GUI window and Buttons
-class Gui(Frame):
+class Gui(Canvas):
     
     #main Frame Constructor
     ###I tried to set "command" to lambda as default, but I kept getting syntax errors.
-    def __init__(self, parent, img, comnd, xcoord, ycoord):
-        Frame.__init__(self, parent)
+    def __init__(self, img, comnd, xcoord, ycoord):
+        Canvas.__init__(self)
         self.img = img
         self.comnd = comnd
         self.xcoord = xcoord
@@ -55,20 +58,25 @@ class Gui(Frame):
     def setupGUI(self):
         img = PhotoImage(file = self.img)
         #creates button and gives it functionality
-        button = Button(self, bg = "white", image = img, borderwidth = 0, \
+        button = Button(window, bg = "white", image = img, borderwidth = 0, \
                         highlightthickness = 0, activebackground = "white",\
                         command = self.comnd)
         #sets button image's name
         button.image = img
         #places button using x and y coordinates
         button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
-        self.pack(fill = BOTH, expand=1)
 
 #Creates the main menu
 class MainMenu(Gui):
 
-    def __init__(self, parent):
-        super().__init__(parent, "images/test.png", self.hello, 400, 300)
+    def __init__(self):
+        super().__init__(self, img, comnd, xcoord, ycoord)
+        self.make_buttons()
+    
+    #creates buttons
+    def make_buttons(self):
+        B1 = MainMenu("images/test.png", self.hello, 100, 300)
+        B1 = MainMenu("images/test.png", self.hello, 700, 300)
     
     ### test function
     def hello(self):
@@ -108,15 +116,17 @@ window.geometry("{}x{}".format(WIDTH, HEIGHT))
 # set the window title
 window.title("The Plaque Pursuers")
 
-#Set background image.
-###I have a higher resolution image, but I could not figure out how to shrink it to the window size
-background_image = PhotoImage(file = "images/game_bg.png")
-background_label = Label(window, image = background_image)
-background_label.place(x = 0, y = 0, relwidth=1, relheight=1)
-
-###generating the gui covers up the background. Fix needed
+###generating the gui covers up the b.ackground. Fix needed
 # generate the GUI
-p = MainMenu(window)
-p.pack()
+p = Canvas(window)
+p.pack(expand = 1, fill = BOTH)
+
+#Set background image
+background_image = PhotoImage(file = "images/game_bg.png")
+p.create_image(0, 0, anchor = NW, image = background_image)
+
+#Set up main menue
+MainMenu()
+
 # display the GUI and wait for user interaction
 window.mainloop()
