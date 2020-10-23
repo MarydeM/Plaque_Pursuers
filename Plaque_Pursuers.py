@@ -5,6 +5,9 @@
 
 ### the three pound signs means it is a note to delete later ###
 
+### here is the website about making and deleting frames
+### https://stackoverflow.com/questions/45905665/is-there-a-way-to-clear-all-widgets-from-a-tkinter-window-in-one-go-without-refe/45915006
+
 #Imports Gui libraries
 from tkinter import *
 
@@ -84,7 +87,7 @@ class MainMenu():
         print("hi, this is a test")
         
     def hi(self):
-        hi = Pipes()
+        print ("this is another test")
         
 #Plays the card matching memory game
 class Memory():
@@ -104,11 +107,10 @@ class Memory():
 class Pipes():
     
     def __init__(self):
-        self.make_buttons()
-        self.forget()
+        pass
         
     def forget(self):
-        window.pac_forget()
+        pass
     
     #creates buttons
     def make_buttons(self):
