@@ -123,14 +123,37 @@ class Memory():
 class Pipes():
     
     def __init__(self):
-        pass
+        self.make_buttons()
         
     def forget(self):
         pass
     
     #creates buttons
     def make_buttons(self):
-        pass
+        self.setup_game()
+        B3 = Gui("images/Exit.png", self.back_menu, 50, 25)
+
+    def setup_game(self):
+        #set the variables for the pipe game
+        grid_length, grid_width = 5, 7 #Length and width of the pipe grid
+        pos_x, pos_y = 150, 150 #starting position of the Pipes
+        Possible_Pipes = ["images/Pipe.png", "images/PipeSideways.png"]
+        #creates a basic grid
+        for length in range(grid_length):
+            pos_x = 150
+            for width in range(grid_width):
+                #buttons are created that call the flip_pipe function
+                PipeChoice = random.randint(0, 1)
+                if(PipeChoice == 0):
+                    Button = Gui("images/PipeSideways.png", self.flip_pipe, pos_x, pos_y)
+                elif(PipeChoice == 1):
+                    Button = Gui("images/Pipe.png", self.flip_pipe, pos_x, pos_y)
+                pos_x += 75
+            pos_y += 75
+
+    def flip_pipe(self):
+        #have the image flip whenever it is clicked here
+        print ("test flip")
     
     #deletes all buttons on the page    
     def delete_buttons(self):
