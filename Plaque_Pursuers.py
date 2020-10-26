@@ -68,40 +68,56 @@ class Gui(Canvas):
         button.image = img
         #places button using x and y coordinates
         button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
+        # adds the newly created button to a list
+        button_list.append(button)
 
 #Creates the main menu
 class MainMenu():
 
+    #calls functions that delete all of the previously made buttons and creates
+    #new buttons for this class
     def __init__(self):
+        self.delete_buttons()
         self.make_buttons()
     
     #creates buttons
     def make_buttons(self):
+        # test buttons
         B1 = Gui("images/test.png", self.hello, 150, 300)
-        B2 = Gui("images/test.png", self.hi, 650, 300)
+        B2 = Gui("images/test.png", self.hello, 650, 300)
+        # back button, goes to Memory
+        B2 = Gui("images/back_button.png", self.memory, 40, 40)
     
     ### test function
     def hello(self):
         ### These functions can be used to call the class assigned to the button
         ### Ex: the Memory game button would call the memory class
         print("hi, this is a test")
-        
-    def hi(self):
-        print ("this is another test")
+    
+    #goes to the new class page
+    def memory(self):
+        Memory()
+    
+    #deletes all buttons on the page
+    def delete_buttons(self):
+        for item in button_list:
+            item.destroy()
         
 #Plays the card matching memory game
 class Memory():
     
     def __init__(self):
+        self.delete_buttons()
         self.make_buttons()
     
     #creates buttons
     def make_buttons(self):
         pass
-    
-    #class functions
-    def example_funt(self):
-        pass
+
+    #deletes all buttons on the page    
+    def delete_buttons(self):
+        for item in button_list:
+            item.destroy()
 
 #Plays the pipes puzzle game
 class Pipes():
@@ -116,9 +132,10 @@ class Pipes():
     def make_buttons(self):
         pass
     
-    #class functions
-    def example_funt(self):
-        pass
+    #deletes all buttons on the page    
+    def delete_buttons(self):
+        for item in button_list:
+            item.destroy()
 
 #Plays the simon memory game
 class Simon():
@@ -130,9 +147,10 @@ class Simon():
     def make_buttons(self):
         pass
     
-    #class functions
-    def example_funt(self):
-        pass
+    #deletes all buttons on the page    
+    def delete_buttons(self):
+        for item in button_list:
+            item.destroy()
 
 #call this class when a game is won
 class Candy():
@@ -141,6 +159,9 @@ class Candy():
 ################
 # Main Program #
 ################
+#will keep a list of created buttons to make them easier to delete
+button_list = []
+
 #window resolution
 #800x600 is Fullscreen on a rasp. pi
 WIDTH, HEIGHT = 800, 600
