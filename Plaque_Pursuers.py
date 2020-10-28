@@ -10,6 +10,7 @@
 
 #Imports Gui libraries
 from tkinter import *
+import random
 
 #Initializes GUI window and Buttons
 class Gui(Canvas):
@@ -83,20 +84,29 @@ class MainMenu():
     #creates buttons
     def make_buttons(self):
         # test buttons
-        B1 = Gui("images/test.png", self.hello, 150, 300)
-        B2 = Gui("images/test.png", self.hello, 650, 300)
+        Gui("images/test.png", self.hello, 150, 300)
+        Gui("images/test.png", self.hello, 650, 300)
         # back button, goes to Memory
-        B2 = Gui("images/back_button.png", self.memory, 40, 40)
+        Gui("images/back_button.png", self.quit_game, 40, 40)
     
     ### test function
     def hello(self):
         ### These functions can be used to call the class assigned to the button
         ### Ex: the Memory game button would call the memory class
         print("hi, this is a test")
+        self.pipes()
     
     #goes to the new class page
     def memory(self):
         Memory()
+        
+    #goes to the new class page
+    def pipes(self):
+        Pipes()
+
+    def quit_game(self):
+        #quits the program whenever the back button is pressed while on the menu
+        quit()
     
     #deletes all buttons on the page
     def delete_buttons(self):
@@ -123,6 +133,7 @@ class Memory():
 class Pipes():
     
     def __init__(self):
+        self.delete_buttons()
         self.make_buttons()
         
     def forget(self):
@@ -131,7 +142,7 @@ class Pipes():
     #creates buttons
     def make_buttons(self):
         self.setup_game()
-        B3 = Gui("images/Exit.png", self.back_menu, 50, 25)
+        Gui("images/back_button.png", self.back_menu, 40, 40)
 
     def setup_game(self):
         #set the variables for the pipe game
@@ -154,7 +165,13 @@ class Pipes():
     def flip_pipe(self):
         #have the image flip whenever it is clicked here
         print ("test flip")
-    
+
+    def back_menu(self):
+        self.main_menu()
+
+    def main_menu(self):
+        MainMenu()
+        
     #deletes all buttons on the page    
     def delete_buttons(self):
         for item in button_list:
