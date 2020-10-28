@@ -80,28 +80,25 @@ class MainMenu():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers")
     
     #creates buttons
     def make_buttons(self):
-        # test buttons
-        Gui("images/test.png", self.hello, 150, 300)
-        Gui("images/test.png", self.hello, 650, 300)
-        # back button, goes to Memory
+        #left button goes to pipes game
+        Gui("images/test.png", self.pipes, 150, 300)
+        #right button goes to memory game
+        Gui("images/test.png", self.memory, 650, 300)
+        #back button closes the game from this menu
         Gui("images/back_button.png", self.quit_game, 40, 40)
-    
-    ### test function
-    def hello(self):
-        ### These functions can be used to call the class assigned to the button
-        ### Ex: the Memory game button would call the memory class
-        print("hi, this is a test")
-        self.pipes()
     
     #goes to the new class page
     def memory(self):
+        print("moving to memory")
         Memory()
         
     #goes to the new class page
     def pipes(self):
+        print("moving to pipes")
         Pipes()
 
     def quit_game(self):
@@ -119,10 +116,15 @@ class Memory():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers: Memory Game")
     
     #creates buttons
     def make_buttons(self):
-        pass
+        Gui("images/back_button.png", self.main_menu, 40, 40)
+
+    def main_menu(self):
+        print("moving to menu")
+        MainMenu()
 
     #deletes all buttons on the page    
     def delete_buttons(self):
@@ -135,6 +137,7 @@ class Pipes():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers: Pipe Game")
         
     def forget(self):
         pass
@@ -167,9 +170,7 @@ class Pipes():
         print ("test flip")
 
     def back_menu(self):
-        self.main_menu()
-
-    def main_menu(self):
+        print("moving to menu")
         MainMenu()
         
     #deletes all buttons on the page    
@@ -222,7 +223,7 @@ p.pack(expand = 1, fill = BOTH)
 background_image = PhotoImage(file = "images/game_bg.png")
 p.create_image(0, 0, anchor = NW, image = background_image)
 
-#Set up main menue
+#Sets up the main menue
 menu = MainMenu()
 
 # display the GUI and wait for user interaction
