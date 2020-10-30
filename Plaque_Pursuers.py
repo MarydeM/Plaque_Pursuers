@@ -7,9 +7,9 @@
 
 ### here is the website about making and deleting frames
 ### https://stackoverflow.com/questions/45905665/is-there-a-way-to-clear-all-widgets-from-a-tkinter-window-in-one-go-without-refe/45915006
-
 #Imports Gui libraries
 from tkinter import *
+import random
 
 #Initializes GUI window and Buttons
 class Gui(Canvas):
@@ -75,28 +75,40 @@ class Gui(Canvas):
 class MainMenu():
 
     #calls functions that delete all of the previously made buttons and creates
-    #new buttons for this class
+    #new buttons for this class, happens every time a new menu is entered
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers")
     
     #creates buttons
     def make_buttons(self):
-        # test buttons
-        B1 = Gui("images/test.png", self.hello, 150, 300)
-        B2 = Gui("images/test.png", self.hello, 650, 300)
-        # back button, goes to Memory
-        B2 = Gui("images/back_button.png", self.memory, 40, 40)
-    
-    ### test function
-    def hello(self):
-        ### These functions can be used to call the class assigned to the button
-        ### Ex: the Memory game button would call the memory class
-        print("hi, this is a test")
+        #left button goes to pipes game
+        Gui("images/test.png", self.pipes, 150, 300)
+        #right button goes to memory game
+        Gui("images/test.png", self.memory, 650, 300)
+        #make the button to move to simon
+        Gui("images/test.png", self.simon, 400, 300)
+        #back button closes the game from this menu, typically just previous menu button
+        Gui("images/back_button.png", self.quit_game, 40, 40)
     
     #goes to the new class page
     def memory(self):
+        print("moving to memory")
         Memory()
+        
+    #goes to the new class page
+    def pipes(self):
+        print("moving to pipes")
+        Pipes()
+
+    def simon(self):
+        print("moving to simon")
+        Simon()
+
+    def quit_game(self):
+        #quits the program whenever the back button is pressed while on the menu
+        quit()
     
     #deletes all buttons on the page
     def delete_buttons(self):
@@ -109,10 +121,15 @@ class Memory():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers: Memory Game")
     
     #creates buttons
     def make_buttons(self):
-        pass
+        Gui("images/back_button.png", self.main_menu, 40, 40)
+
+    def main_menu(self):
+        print("moving to menu")
+        MainMenu()
 
     #deletes all buttons on the page    
     def delete_buttons(self):
@@ -123,15 +140,44 @@ class Memory():
 class Pipes():
     
     def __init__(self):
-        pass
+        self.delete_buttons()
+        self.make_buttons()
+        window.title("The Plaque Pursuers: Pipe Game")
         
     def forget(self):
         pass
     
     #creates buttons
     def make_buttons(self):
-        pass
-    
+        self.setup_game()
+        Gui("images/back_button.png", self.back_menu, 40, 40)
+
+    def setup_game(self):
+        #set the variables for the pipe game
+        grid_length, grid_width = 5, 7 #Length and width of the pipe grid
+        pos_x, pos_y = 150, 150 #starting position of the Pipes
+        Possible_Pipes = ["images/Pipe.png", "images/PipeSideways.png"]
+        #creates a basic grid
+        for length in range(grid_length):
+            pos_x = 150
+            for width in range(grid_width):
+                #buttons are created that call the flip_pipe function
+                PipeChoice = random.randint(0, 1)
+                if(PipeChoice == 0):
+                    Button = Gui("images/PipeSideways.png", self.flip_pipe, pos_x, pos_y)
+                elif(PipeChoice == 1):
+                    Button = Gui("images/Pipe.png", self.flip_pipe, pos_x, pos_y)
+                pos_x += 75
+            pos_y += 75
+
+    def flip_pipe(self):
+        #have the image rotated whenever it is clicked here ###functionality needs to be added###
+        print ("test flip")
+
+    def back_menu(self):
+        print("moving to menu")
+        MainMenu()
+        
     #deletes all buttons on the page    
     def delete_buttons(self):
         for item in button_list:
@@ -141,11 +187,17 @@ class Pipes():
 class Simon():
     
     def __init__(self):
+        self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers: Simon Says")
     
     #creates buttons
     def make_buttons(self):
-        pass
+        Gui("images/back_button.png", self.back_menu, 40, 40)
+
+    def back_menu(self):
+        print("moving to menu")
+        MainMenu()
     
     #deletes all buttons on the page    
     def delete_buttons(self):
@@ -182,7 +234,7 @@ p.pack(expand = 1, fill = BOTH)
 background_image = PhotoImage(file = "images/game_bg.png")
 p.create_image(0, 0, anchor = NW, image = background_image)
 
-#Set up main menue
+#Sets up & enters the main menue
 menu = MainMenu()
 
 # display the GUI and wait for user interaction
