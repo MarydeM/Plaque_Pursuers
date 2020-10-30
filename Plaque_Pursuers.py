@@ -7,7 +7,6 @@
 
 ### here is the website about making and deleting frames
 ### https://stackoverflow.com/questions/45905665/is-there-a-way-to-clear-all-widgets-from-a-tkinter-window-in-one-go-without-refe/45915006
-
 #Imports Gui libraries
 from tkinter import *
 import random
@@ -76,7 +75,7 @@ class Gui(Canvas):
 class MainMenu():
 
     #calls functions that delete all of the previously made buttons and creates
-    #new buttons for this class
+    #new buttons for this class, happens every time a new menu is entered
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
@@ -88,7 +87,9 @@ class MainMenu():
         Gui("images/test.png", self.pipes, 150, 300)
         #right button goes to memory game
         Gui("images/test.png", self.memory, 650, 300)
-        #back button closes the game from this menu
+        #make the button to move to simon
+        Gui("images/test.png", self.simon, 400, 300)
+        #back button closes the game from this menu, typically just previous menu button
         Gui("images/back_button.png", self.quit_game, 40, 40)
     
     #goes to the new class page
@@ -100,6 +101,10 @@ class MainMenu():
     def pipes(self):
         print("moving to pipes")
         Pipes()
+
+    def simon(self):
+        print("moving to simon")
+        Simon()
 
     def quit_game(self):
         #quits the program whenever the back button is pressed while on the menu
@@ -166,7 +171,7 @@ class Pipes():
             pos_y += 75
 
     def flip_pipe(self):
-        #have the image flip whenever it is clicked here
+        #have the image rotated whenever it is clicked here ###functionality needs to be added###
         print ("test flip")
 
     def back_menu(self):
@@ -182,11 +187,17 @@ class Pipes():
 class Simon():
     
     def __init__(self):
+        self.delete_buttons()
         self.make_buttons()
+        window.title("The Plaque Pursuers: Simon Says")
     
     #creates buttons
     def make_buttons(self):
-        pass
+        Gui("images/back_button.png", self.back_menu, 40, 40)
+
+    def back_menu(self):
+        print("moving to menu")
+        MainMenu()
     
     #deletes all buttons on the page    
     def delete_buttons(self):
@@ -223,7 +234,7 @@ p.pack(expand = 1, fill = BOTH)
 background_image = PhotoImage(file = "images/game_bg.png")
 p.create_image(0, 0, anchor = NW, image = background_image)
 
-#Sets up the main menue
+#Sets up & enters the main menue
 menu = MainMenu()
 
 # display the GUI and wait for user interaction
