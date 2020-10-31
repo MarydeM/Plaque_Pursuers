@@ -5,8 +5,6 @@
 
 ### the three pound signs means it is a note to delete later ###
 
-### here is the website about making and deleting frames
-### https://stackoverflow.com/questions/45905665/is-there-a-way-to-clear-all-widgets-from-a-tkinter-window-in-one-go-without-refe/45915006
 #Imports Gui libraries
 from tkinter import *
 import random
@@ -15,7 +13,6 @@ import random
 class Gui(Canvas):
     
     #main Frame Constructor
-    ###I tried to set "command" to lambda as default, but I kept getting syntax errors.
     def __init__(self, img, comnd, xcoord, ycoord):
         Canvas.__init__(self)
         self.img = img
@@ -87,28 +84,30 @@ class MainMenu():
         Gui("images/test.png", self.pipes, 150, 300)
         #right button goes to memory game
         Gui("images/test.png", self.memory, 650, 300)
-        #make the button to move to simon
+        #middle button to move to simon
         Gui("images/test.png", self.simon, 400, 300)
-        #back button closes the game from this menu, typically just previous menu button
+        #back button closes the game from this menu, typically just 
+        #previous menu button
         Gui("images/back_button.png", self.quit_game, 40, 40)
     
-    #goes to the new class page
+    #goes to the new class page, Memory
     def memory(self):
         print("moving to memory")
         Memory()
         
-    #goes to the new class page
+    #goes to the new class page, Pipes
     def pipes(self):
         print("moving to pipes")
         Pipes()
 
+    #goes to the class page, Simon
     def simon(self):
         print("moving to simon")
         Simon()
 
+    #quits the program whenever the back button is pressed while on the menu
     def quit_game(self):
-        #quits the program whenever the back button is pressed while on the menu
-        quit()
+        window.destroy()
     
     #deletes all buttons on the page
     def delete_buttons(self):
@@ -124,8 +123,37 @@ class Memory():
         window.title("The Plaque Pursuers: Memory Game")
     
     #creates buttons
-    def make_buttons(self):
+    def make_buttons(self):#140 from top edge
         Gui("images/back_button.png", self.main_menu, 40, 40)
+        #creates a dictionary with card names as keys and images as values
+        # global cards = {}
+        #distance of cards form the left screen edge
+        from_edge = 108
+        for i in range (6):
+            # Makes variable names using a, b, & c for rows and i for columns
+            global a1
+            a = str("a" + str(i))
+            b = str("b" + str(i))
+            c = str("c" + str(i))
+            #creates buttons with unique names to denote their location
+            a1 = Gui("images/card_back.png", self.flip, from_edge, 140)
+            globals()[b] = Gui("images/card_back.png", self.flip, from_edge, 310)
+            globals()[c] = Gui("images/card_back.png", self.flip, from_edge, 481)
+            from_edge += 115
+        
+        self.assign_images()
+    
+    #assigns images for the back of cards        
+    def assign_images(self):
+        global a1
+        images = ["images/candy1.png", "images/candy2.png"]
+        img = PhotoImage(file ="images/candy1.png")
+        a1.configure(image = img)#random.choice(images))
+        al.photo = img
+        
+        
+    def flip(self):
+        print ()
 
     def main_menu(self):
         print("moving to menu")
