@@ -84,8 +84,8 @@ class MainMenu():
         Gui("images/test.png", self.pipes, 150, 300)
         #right button goes to memory game
         Gui("images/test.png", self.memory, 650, 300)
-        #middle button to move to simon
-        Gui("images/test.png", self.simon, 400, 300)
+        # #middle button to move to simon
+        # Gui("images/test.png", self.simon, 400, 300)
         #back button closes the game from this menu, typically just 
         #previous menu button
         Gui("images/back_button.png", self.quit_game, 40, 40)
@@ -113,17 +113,21 @@ class MainMenu():
     def delete_buttons(self):
         for item in button_list:
             item.destroy()
+        #clears the buttons in the list
+        button_list.clear()
         
 #Plays the card matching memory game
 class Memory():
     
     def __init__(self):
+        print ("init")
         self.delete_buttons()
         self.make_buttons()
         window.title("The Plaque Pursuers: Memory Game")
     
     #creates buttons
     def make_buttons(self):#140 from top edge
+        print ("make buttons")
         Gui("images/back_button.png", self.main_menu, 40, 40)
         #creates a dictionary with card names as keys and images as values
         # global cards = {}
@@ -131,29 +135,32 @@ class Memory():
         from_edge = 108
         for i in range (6):
             # Makes variable names using a, b, & c for rows and i for columns
-            global a1
             a = str("a" + str(i))
             b = str("b" + str(i))
             c = str("c" + str(i))
+            global a1
             #creates buttons with unique names to denote their location
-            a1 = Gui("images/card_back.png", self.flip, from_edge, 140)
+            globals()[a] = Gui("images/card_back.png", self.flip, from_edge, 140)
             globals()[b] = Gui("images/card_back.png", self.flip, from_edge, 310)
             globals()[c] = Gui("images/card_back.png", self.flip, from_edge, 481)
             from_edge += 115
         
-        self.assign_images()
+        # self.assign_images()
     
     #assigns images for the back of cards        
     def assign_images(self):
         global a1
-        images = ["images/candy1.png", "images/candy2.png"]
-        img = PhotoImage(file ="images/candy1.png")
-        a1.configure(image = img)#random.choice(images))
-        al.photo = img
+        # images = ["images/candy1.png", "images/candy2.png"]
+        a1.config(image = "images/candy2.png")
+        # a1.configure(image = "images/candy1.png")   #random.choice(images))
+        # al.photo = img
         
         
     def flip(self):
-        print ()
+        global a1
+        print ("it worked")
+        button_list[5].destroy()
+        
 
     def main_menu(self):
         print("moving to menu")
@@ -163,6 +170,8 @@ class Memory():
     def delete_buttons(self):
         for item in button_list:
             item.destroy()
+        #clears the buttons in the list
+        button_list.clear()
 
 #Plays the pipes puzzle game
 class Pipes():
@@ -210,27 +219,30 @@ class Pipes():
     def delete_buttons(self):
         for item in button_list:
             item.destroy()
+        #clears the buttons in the list
+        button_list.clear()
 
-#Plays the simon memory game
-class Simon():
+###May delete this later###
+# #Plays the simon memory game
+# class Simon():
     
-    def __init__(self):
-        self.delete_buttons()
-        self.make_buttons()
-        window.title("The Plaque Pursuers: Simon Says")
+#     def __init__(self):
+#         self.delete_buttons()
+#         self.make_buttons()
+#         window.title("The Plaque Pursuers: Simon Says")
     
-    #creates buttons
-    def make_buttons(self):
-        Gui("images/back_button.png", self.back_menu, 40, 40)
+#     #creates buttons
+#     def make_buttons(self):
+#         Gui("images/back_button.png", self.back_menu, 40, 40)
 
-    def back_menu(self):
-        print("moving to menu")
-        MainMenu()
+#     def back_menu(self):
+#         print("moving to menu")
+#         MainMenu()
     
-    #deletes all buttons on the page    
-    def delete_buttons(self):
-        for item in button_list:
-            item.destroy()
+#     #deletes all buttons on the page    
+#     def delete_buttons(self):
+#         for item in button_list:
+#             item.destroy()
 
 #call this class when a game is won
 class Candy():
