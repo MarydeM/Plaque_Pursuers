@@ -91,9 +91,9 @@ class MainMenu():
     #creates buttons
     def make_buttons(self):
         #left button goes to pipes game
-        Gui("images/test.png", self.pipes, 150, 300)
+        Gui("images/pipes.png", self.pipes, 200, 300)
         #right button goes to memory game
-        Gui("images/test.png", self.memory, 650, 300)
+        Gui("images/memory.png", self.memory, 600, 300)
         # #middle button to move to simon
         # Gui("images/test.png", self.simon, 400, 300)
         #back button closes the game from this menu, typically just 
@@ -130,22 +130,26 @@ class MainMenu():
 class Memory():
     
     def __init__(self):
-        self.delete_buttons()
-        self.make_buttons()
         window.title("The Plaque Pursuers: Memory Game")
+        self.delete_buttons()
+        #makes a list to contain all labels made
+        global labels
+        # keeps a list of the cards that have been flipped
+        global chosen_cards
+        chosen_cards = []
+        labels = {}
+        #gets card images
+        self.get_images()
+        self.make_buttons()
     
-    #creates buttons
+    #creates buttons and stores names
     def make_buttons(self):
-        self.assign_images()
+        #makes back button
         Gui("images/back_button.png", self.main_menu, 40, 40)
         #creates golbal a dictionary with card names as keys and 
         #card location as values
         global cards
         cards = {}
-        #distance of cards form the left screen edge
-        from_edge = 108
-        #card location
-        j = 0
         # Makes variable names using a, b, & c for rows and i for columns
         global card_names
         card_names = []
@@ -156,13 +160,21 @@ class Memory():
             card_names.append(a)
             card_names.append(b)
             card_names.append(c)
+        #distance of cards from the left screen edge
+        from_edge = 108
+        #card location
+        j = 0
         for i in range (6):
-            print (card_names[j], card_names[j + 1], card_names[j + 2])
+            #assigns an image to the front of the card with the same name
+            #and location
+            self.assign_images(card_names[j], from_edge, 140)
             #creates buttons with unique names to denote their location
             Gui("images/card_back.png", functools.partial(self.flip, \
                         card_names[j]), from_edge, 140, card_names[j])
+            self.assign_images(card_names[j + 1], from_edge, 310)
             Gui("images/card_back.png", functools.partial(self.flip, \
                         card_names[j + 1]), from_edge, 310, card_names[j + 1])
+            self.assign_images(card_names[j + 2], from_edge, 481)
             Gui("images/card_back.png", functools.partial(self.flip, \
                         card_names[j + 2]), from_edge, 481, card_names[j + 2])
             #iterates the x axis
@@ -174,33 +186,54 @@ class Memory():
             #iterates card location
             j += 3
     
-    #assigns images for the back of cards        
-    def assign_images(self):
-        global card_names
-        #creates a list of images
+    #gets images to be used on the card fronts
+    def get_images(self):
+        #creates a list for images
+        global images
         images = []
-        #distance of cards form the left screen edge
-        from_edge = 108
-        #adds all images to the list
-        for i in range (1, 3):
+        #adds two of each image to the list
+        for i in range (1, 10):
             images.append("images/candy" + str(i) + ".png")
             images.append("images/candy" + str(i) + ".png")
-        for pic in images:
-            image = random.choice(images)
-            Gui(image, functools.partial(self.flip, card_names[i]), from_edge, 481, card_names[i])
-            from_edge += 115
+    
+    #assigns images for the back of cards        
+    def assign_images(self, name, x, y):
+        global images
+        global labels
+        #chooses a random image
+        img = random.choice(images)
+        picture = PhotoImage(file = img)
+        #makes a label with the image
+        name = Label(window, image = picture)
+        #anchors image to label
+        name.photo = picture
+        name.place(x = x, y = y, anchor = "center")
+        # Gui(image, functools.partial(None, name), x, y, name)
+        #removes the image from the list so it can not be used again
+        images.remove(img)
+        # adds the name of the image as the value; uses the name of the card
+        # location (i.e.: a0) as the key
+        labels[name] = img
         
         
     #flips a card over by recieving name as input  
     def flip(self, name):
         global cards
+        global labels
         #finds card's location in the list with the dictionary
         card = cards.get(name)
         #hide the card that has been clicked on to reveal its back
         button_list[card + 1].place_forget()
-        
+        #keeps track of the cards that have been flipped
+        if len(chosen_cards) < 2:
+            chosen_cards.append(name)
+            print (chosen_cards)
 
+    # deletes all labels and goes to the main menu
     def main_menu(self):
+        global labels
+        for item in labels:
+            item.destroy()
         print("moving to menu")
         MainMenu()
 
@@ -210,6 +243,7 @@ class Memory():
             item.destroy()
         #clears the buttons in the list
         button_list.clear()
+        
 
 #Plays the pipes puzzle game
 class Pipes():
