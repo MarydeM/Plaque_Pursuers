@@ -206,9 +206,6 @@ class Memory():
     
     #assigns images for the back of cards        
     def assign_images(self, name, x, y):
-        global images
-        global labels
-        global label_names
         #chooses a random image
         img = random.choice(images)
         picture = PhotoImage(file = img)
@@ -225,19 +222,19 @@ class Memory():
         images.remove(img)
         # adds the name of the image as the value; uses the name of the card
         # location (i.e.: a0) as the key
-        labels.append(name)
-        
+        labels.append(name)    
         
     #flips a card over by recieving name as input
     #checks for a card match
     def flip(self, name):
-        global cards
-        global label_names
-        global score
         #finds card's location in the list with the dictionary
         card = cards.get(name)[0]
         #hide the card that has been clicked on to reveal its back
         button_list[card + 1].place_forget()
+        self.score_counter(name)
+        
+    def score_counter(self, name):
+        global score
         #keeps track of the cards that have been flipped
         if len(chosen_cards) < 2:
             chosen_cards.append(name)
@@ -254,15 +251,14 @@ class Memory():
                 #a key, finding the values to that key (cards.get())
                 #cards.get[0] = list location, cards.get[1] = x coordinate,
                 #cards.get[2] = y coordinate
-                sleep(1)
                 button_list[cards.get(chosen_cards[0])[0] + 1].place\
                     (x = cards.get(chosen_cards[0])[1], \
-                     y = cards.get(chosen_cards[0])[2], \
-                     anchor = "center")
+                      y = cards.get(chosen_cards[0])[2], \
+                      anchor = "center")
                 button_list[cards.get(chosen_cards[1])[0] + 1].place\
                     (x = cards.get(chosen_cards[1])[1], \
-                     y = cards.get(chosen_cards[1])[2], \
-                     anchor = "center")
+                      y = cards.get(chosen_cards[1])[2], \
+                      anchor = "center")
                 chosen_cards.clear()
 
     # deletes all labels and goes to the main menu
