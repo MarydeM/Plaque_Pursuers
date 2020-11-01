@@ -9,6 +9,7 @@
 import functools
 from tkinter import *
 import random
+from time import sleep
 
 #Initializes GUI window and Buttons
 class Gui(Canvas):
@@ -134,10 +135,16 @@ class Memory():
         self.delete_buttons()
         #makes a list to contain all labels made
         global labels
+        labels = []
+        #makes a dictionary of the label names and locations
+        global label_names
+        label_names = {}
         # keeps a list of the cards that have been flipped
         global chosen_cards
         chosen_cards = []
-        labels = {}
+        #keeps score of cards matched
+        global score
+        score = 0
         #gets card images
         self.get_images()
         self.make_buttons()
@@ -177,12 +184,13 @@ class Memory():
             self.assign_images(card_names[j + 2], from_edge, 481)
             Gui("images/card_back.png", functools.partial(self.flip, \
                         card_names[j + 2]), from_edge, 481, card_names[j + 2])
+            #adds card names and location in list, x coordinate, and y 
+            #coordinate to the dictionary
+            cards[card_names[j]] = [j, from_edge, 140]
+            cards[card_names[j + 1]] = [j + 1, from_edge, 310]
+            cards[card_names[j + 2]] = [j + 2, from_edge, 481]
             #iterates the x axis
             from_edge += 115
-            #adds card names and location to the dictionary
-            cards[card_names[j]] = j
-            cards[card_names[j + 1]] = j + 1
-            cards[card_names[j + 2]] = j + 2
             #iterates card location
             j += 3
     
@@ -200,10 +208,14 @@ class Memory():
     def assign_images(self, name, x, y):
         global images
         global labels
+        global label_names
         #chooses a random image
         img = random.choice(images)
         picture = PhotoImage(file = img)
-        #makes a label with the image
+        # adds the name of the image as the value; uses the name of the card
+        # location (i.e.: a0) as the key
+        label_names[name] = img
+        #makes a label with the image and turns "name" into an actual label
         name = Label(window, image = picture)
         #anchors image to label
         name.photo = picture
@@ -213,21 +225,45 @@ class Memory():
         images.remove(img)
         # adds the name of the image as the value; uses the name of the card
         # location (i.e.: a0) as the key
-        labels[name] = img
+        labels.append(name)
         
         
-    #flips a card over by recieving name as input  
+    #flips a card over by recieving name as input
+    #checks for a card match
     def flip(self, name):
         global cards
-        global labels
+        global label_names
+        global score
         #finds card's location in the list with the dictionary
-        card = cards.get(name)
+        card = cards.get(name)[0]
         #hide the card that has been clicked on to reveal its back
         button_list[card + 1].place_forget()
         #keeps track of the cards that have been flipped
         if len(chosen_cards) < 2:
             chosen_cards.append(name)
             print (chosen_cards)
+        #if two cards have been selected, check to see if the images match
+        if len(chosen_cards) == 2:
+            if label_names.get(chosen_cards[0]) == label_names.get(chosen_cards[1]):
+                #if they match, iterate the score and clear the selected cards
+                score += 1
+                chosen_cards.clear()
+            #if they do not match, flip cards back over
+            else:
+                #Places the card back side by taking the name (chosen_cards) as
+                #a key, finding the values to that key (cards.get())
+                #cards.get[0] = list location, cards.get[1] = x coordinate,
+                #cards.get[2] = y coordinate
+                sleep(1)
+                button_list[cards.get(chosen_cards[0])[0] + 1].place\
+                    (x = cards.get(chosen_cards[0])[1], \
+                     y = cards.get(chosen_cards[0])[2], \
+                     anchor = "center")
+                button_list[cards.get(chosen_cards[1])[0] + 1].place\
+                    (x = cards.get(chosen_cards[1])[1], \
+                     y = cards.get(chosen_cards[1])[2], \
+                     anchor = "center")
+                chosen_cards.clear()
 
     # deletes all labels and goes to the main menu
     def main_menu(self):
