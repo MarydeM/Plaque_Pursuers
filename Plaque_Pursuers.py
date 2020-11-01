@@ -136,6 +136,7 @@ class Memory():
     
     #creates buttons
     def make_buttons(self):
+        self.assign_images()
         Gui("images/back_button.png", self.main_menu, 40, 40)
         #creates golbal a dictionary with card names as keys and 
         #card location as values
@@ -143,9 +144,10 @@ class Memory():
         cards = {}
         #distance of cards form the left screen edge
         from_edge = 108
-        # #card location
+        #card location
         j = 0
         # Makes variable names using a, b, & c for rows and i for columns
+        global card_names
         card_names = []
         for n in range(6):
             a = str("a" + str(n))
@@ -171,12 +173,22 @@ class Memory():
             cards[card_names[j + 2]] = j + 2
             #iterates card location
             j += 3
-        
-        # self.assign_images()
     
     #assigns images for the back of cards        
     def assign_images(self):
-        images = ["images/candy1.png", "images/candy2.png"]
+        global card_names
+        #creates a list of images
+        images = []
+        #distance of cards form the left screen edge
+        from_edge = 108
+        #adds all images to the list
+        for i in range (1, 3):
+            images.append("images/candy" + str(i) + ".png")
+            images.append("images/candy" + str(i) + ".png")
+        for pic in images:
+            image = random.choice(images)
+            Gui(image, functools.partial(self.flip, card_names[i]), from_edge, 481, card_names[i])
+            from_edge += 115
         
         
     #flips a card over by recieving name as input  
