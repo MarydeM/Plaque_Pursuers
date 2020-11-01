@@ -5,7 +5,8 @@
 
 ### the three pound signs means it is a note to delete later ###
 
-#Imports Gui libraries
+#Imports libraries
+import functools
 from tkinter import *
 import random
 
@@ -13,12 +14,13 @@ import random
 class Gui(Canvas):
     
     #main Frame Constructor
-    def __init__(self, img, comnd, xcoord, ycoord):
+    def __init__(self, img, comnd, xcoord, ycoord, name = None):
         Canvas.__init__(self)
         self.img = img
         self.comnd = comnd
         self.xcoord = xcoord
         self.ycoord = ycoord
+        self.name = name
         self.setupGUI()
         
     #mutators and grabers
@@ -54,13 +56,21 @@ class Gui(Canvas):
     def ycoord(self, value):            
         self._ycoord = value
         
+    @property
+    def name(self):                   
+        return self._name   
+                                      
+    @name.setter                      
+    def name(self, value):            
+        self._name = value
+        
     # sets up indovidual buttons
     def setupGUI(self):
         img = PhotoImage(file = self.img)
         #creates button and gives it functionality
         button = Button(window, bg = "white", image = img, borderwidth = 0, \
                         highlightthickness = 0, activebackground = "white",\
-                        command = self.comnd)
+                        command = self.comnd, name = self.name)
         #sets button image's name
         button.image = img
         #places button using x and y coordinates
@@ -120,46 +130,62 @@ class MainMenu():
 class Memory():
     
     def __init__(self):
-        print ("init")
         self.delete_buttons()
         self.make_buttons()
         window.title("The Plaque Pursuers: Memory Game")
     
     #creates buttons
-    def make_buttons(self):#140 from top edge
-        print ("make buttons")
+    def make_buttons(self):
         Gui("images/back_button.png", self.main_menu, 40, 40)
-        #creates a dictionary with card names as keys and images as values
-        # global cards = {}
+        #creates golbal a dictionary with card names as keys and 
+        #card location as values
+        global cards
+        cards = {}
         #distance of cards form the left screen edge
         from_edge = 108
+        # #card location
+        j = 0
+        # Makes variable names using a, b, & c for rows and i for columns
+        card_names = []
+        for n in range(6):
+            a = str("a" + str(n))
+            b = str("b" + str(n))
+            c = str("c" + str(n))
+            card_names.append(a)
+            card_names.append(b)
+            card_names.append(c)
         for i in range (6):
-            # Makes variable names using a, b, & c for rows and i for columns
-            a = str("a" + str(i))
-            b = str("b" + str(i))
-            c = str("c" + str(i))
-            global a1
+            print (card_names[j], card_names[j + 1], card_names[j + 2])
             #creates buttons with unique names to denote their location
-            globals()[a] = Gui("images/card_back.png", self.flip, from_edge, 140)
-            globals()[b] = Gui("images/card_back.png", self.flip, from_edge, 310)
-            globals()[c] = Gui("images/card_back.png", self.flip, from_edge, 481)
+            Gui("images/card_back.png", functools.partial(self.flip, \
+                        card_names[j]), from_edge, 140, card_names[j])
+            Gui("images/card_back.png", functools.partial(self.flip, \
+                        card_names[j + 1]), from_edge, 310, card_names[j + 1])
+            Gui("images/card_back.png", functools.partial(self.flip, \
+                        card_names[j + 2]), from_edge, 481, card_names[j + 2])
+            #iterates the x axis
             from_edge += 115
+            #adds card names and location to the dictionary
+            cards[card_names[j]] = j
+            cards[card_names[j + 1]] = j + 1
+            cards[card_names[j + 2]] = j + 2
+            #iterates card location
+            j += 3
         
         # self.assign_images()
     
     #assigns images for the back of cards        
     def assign_images(self):
-        global a1
-        # images = ["images/candy1.png", "images/candy2.png"]
-        a1.config(image = "images/candy2.png")
-        # a1.configure(image = "images/candy1.png")   #random.choice(images))
-        # al.photo = img
+        images = ["images/candy1.png", "images/candy2.png"]
         
         
-    def flip(self):
-        global a1
-        print ("it worked")
-        button_list[5].destroy()
+    #flips a card over by recieving name as input  
+    def flip(self, name):
+        global cards
+        #finds card's location in the list with the dictionary
+        card = cards.get(name)
+        #hide the card that has been clicked on to reveal its back
+        button_list[card + 1].place_forget()
         
 
     def main_menu(self):
