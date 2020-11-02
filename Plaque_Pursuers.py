@@ -13,6 +13,7 @@ from time import sleep
 
 #makes is so the motor abilities can be used or not
 global gpio_on
+#set false when not on rasp py
 gpio_on = False
 
 #Initializes GUI window and Buttons that navigate menues
@@ -73,7 +74,7 @@ class Gui(Canvas):
     def setupGUI(self):
         img = PhotoImage(file = self.img)
         #creates button and gives it functionality
-        button = Button(window, bg = None, image = img, borderwidth = 0, \
+        button = Button(window, bg = "white", image = img, borderwidth = 0, \
                         highlightthickness = 0, activebackground = None,\
                         command = self.comnd, name = self.name)
         #sets button image's name
@@ -103,9 +104,9 @@ class Game_Gui(Canvas):
         
     #mutators and grabers
     @property
-    def location(self):                   
-        return self._location         
-                                      
+    def location(self):
+        return self._location
+
     @location.setter                      
     def location(self, value):            
         self._location = value
@@ -396,44 +397,96 @@ class Pipes():
     
     #creates buttons
     def make_buttons(self):
+        #create a background for the pipes using a rectangle
+        global rect
+        rect = p.create_rectangle(110, 60, 790, 440, fill = "white")
         self.setup_game()
+        #create the back to menu button
         Gui("images/back_button.png", self.back_menu, 40, 40)
-        Gui("images/Pipe2_light.png", None, 75, 150)
-        #30 is end goal
-        Game_Gui(2, 30, False, flip_pipe, 675, 150)
-##        Gui("images/Pipe1_light.png", None, 525, 525)
+        #create the flow
+        Gui("images/flow.png", None, 150, 100)
+        #Sink, 30 is end goal, it is an arbitrary number
+        Game_Gui(15, 30, False, flip_pipe, 750, 100)
 
     def setup_game(self):
         #set the variables for the pipe game:
         #Length and width of the pipe grid
         grid_length, grid_width = 5, 7 
         #starting position of the Pipes
-        pos_x, pos_y = 150, 150
+        pos_x, pos_y = 225, 100
         #1==vertical, 2==horizontal, 3==down to right,4==up to right, 5==left to up, 6==left to down,
         #7==up to down and left to right.
         Possible_Pipes = [1, 2, 3, 4, 5, 6, 7]
+        #there will be 9 possible boards to use as a base
+        Boards = [1, 2, 3, 4, 5]
+        #location == where on the 5x7 board the button is
         location = 1
+        #randomly choose a board to use as a base
+        board_choice = random.choice(Boards)
         #creates a basic grid
         for length in range(grid_length):
-            pos_x = 150
+            pos_x = 225
             for width in range(grid_width):
                 #buttons are created that call the flip_pipe function
                 PipeChoice = random.choice(Possible_Pipes)
                 #button is created with the image index being put into the game_gui
-                if(location <= 7):
-                    Button = Game_Gui(1, location, False, flip_pipe, pos_x, pos_y)
+                #if the board is board1, create this board
+                if(board_choice == 1):
+                    #draw specific pattern
+                    if(location <= 2):
+                        Button = Game_Gui(1, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 3):
+                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 10):
+                        Button = Game_Gui(2, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 17):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 18):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 12) and (location == 13):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 7):
+                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 19):
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 11):
+                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 20):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 13):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 14):
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
+                    #fill rest randomly
+                    else:
+                        Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
+                elif(board_choice == 2):
+                    pass
+                elif(board_choice == 3):
+                    pass
+                elif(board_choice == 4):
+                    pass
+                elif(board_choice == 5):
+                    pass
+                #fallback
                 else:
                     Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
                 #increases the location in the grid by one
                 location += 1
-                #moves x cord by 75
+                #moves x cord by 75 for next x
                 pos_x += 75
-            #moves y cord by 75
+            #moves y cord by 75 for next y
             pos_y += 75
-            
+
+    #return to main menu if back button is pressed
     def back_menu(self):
+        #delete the rectangle
+        global rect
+        p.delete(rect)
         print("moving to menu")
+        #clear the made_pipes list
         made_pipes.clear()
+        #return to menu
         MainMenu()
         
     #deletes all buttons on the page    
@@ -446,15 +499,17 @@ class Pipes():
 #flip button will be outside class so that button can be passed in
 def flip_pipe(button):
     #have the image rotated whenever it is clicked here ###functionality needs to be added for "flow"###
-    #end goal
+    #end goal/the sink
     if(button.location == 30):
+        #skip so nothing happens once the button is pressed
         return
+    #if the final pipe is true
     if(made_pipes[6].pipe_connected == True):
+        #set the sink to True
         made_pipes[30].pipe_connected = True
         button.img_index = 9
         button.configure(image = pipe_image_list[button.img_index - 1])
         Candy()
-    
     if(button.img_index == 1):
         #set image index to whatever img_index = to.
         button.img_index = 2 
@@ -474,7 +529,6 @@ def flip_pipe(button):
     elif(button.img_index == 6):
         button.img_index = 3
         button.configure(image = pipe_image_list[button.img_index - 1])
-        
     #check pipe above
     if(made_pipes[button.location - 8].pipe_connected == True):
         if(made_pipes[button.location - 9].img_index == 9):
@@ -482,12 +536,18 @@ def flip_pipe(button):
                 button.pipe_connected = True
                 button.img_index = 8 
                 button.configure(image = pipe_image_list[button.img_index - 1])
-
-
     print(button.location)
+    #print previous states
+    print("left: "  + str(made_pipes[button.location - 2].pipe_connected))
+    print("above: " + str(made_pipes[button.location - 8].pipe_connected))
+    print("right: " + str(made_pipes[button.location].pipe_connected))
+    print("below: " + str(made_pipes[button.location + 6].pipe_connected))
+    print("self was: "  + str(button.pipe_connected))
+    print("location: " + str(button.location))
     ###this is a mess, i didnt have time to clear out everything that is unnecessary###
-    #check pipe to left
-    if(made_pipes[button.location - 2].pipe_connected == True):
+    #check pipe to left, except when on edge
+    if(made_pipes[button.location - 2].pipe_connected == True) and (button.location != 8) \
+        and (button.location != 15) and (button.location != 22) and (button.location != 29):
         if(made_pipes[button.location - 2].img_index == 9) or (made_pipes[button.location - 2].img_index == 14):
             if(button.img_index == 2):
                 button.pipe_connected = True
@@ -542,14 +602,10 @@ def flip_pipe(button):
                 button.pipe_connected = False
                 button.img_index = 6
                 button.configure(image = pipe_image_list[button.img_index - 1])
-                
-
-                    
             elif(button.img_index == 14):
                 button.pipe_connected = False
                 button.img_index = 7
                 button.configure(image = pipe_image_list[button.img_index - 1])
-                
         #click current pipe, spin
         if(button.img_index == 9):
             button.pipe_connected = False
@@ -579,11 +635,6 @@ def flip_pipe(button):
         elif(button.img_index == 6):
             button.img_index = 13
             button.configure(image = pipe_image_list[button.img_index - 1])
-    #button.location shows location in the grid
-    print(made_pipes[button.location - 2].pipe_connected)
-    print(made_pipes[button.location - 8].pipe_connected)
-    print(button.pipe_connected)
-    print(button.location)
 
         
 ##    elif(made_pipes[0].img_index == 5):
@@ -662,7 +713,7 @@ made_pipes = []
 
 #window resolution
 #800x600 is Fullscreen on a rasp. pi
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 480
 
 # create the window
 window = Tk()
@@ -683,7 +734,9 @@ pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "ima
                    PhotoImage(file = "images/Pipe7.png"), PhotoImage(file = "images/Pipe1_light.png"), \
                    PhotoImage(file = "images/Pipe2_light.png"), PhotoImage(file = "images/Pipe3_light.png"), \
                    PhotoImage(file = "images/Pipe4_light.png"), PhotoImage(file = "images/Pipe5_light.png"), \
-                   PhotoImage(file = "images/Pipe6_light.png"), PhotoImage(file = "images/Pipe7_light.png")]
+                   PhotoImage(file = "images/Pipe6_light.png"), PhotoImage(file = "images/Pipe7_light.png"), \
+                   PhotoImage(file = "images/sink.png"), PhotoImage(file = "images/sink_light.png"), \
+                   PhotoImage(file = "images/flow.png")]
 
 #Set background image
 background_image = PhotoImage(file = "images/game_bg.png")
