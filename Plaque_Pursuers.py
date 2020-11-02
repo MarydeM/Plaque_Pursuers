@@ -453,6 +453,40 @@ def flip_pipe(button):
 class Candy():
     if gpio_on == False:
         pass
+    
+    if gpio_on == True:
+        import RPi.GPIO as GPIO
+        
+        #set up pins and assign numbers to them  
+        GPIO.setmode(GPIO.BCM)
+        
+        ControlPin = [18, 21, 24, 27]
+        
+        for pin in ControlPin:
+            GPIO.setup(pin, GPIO.OUT)
+            GPIO.output(pin, 0)
+        
+        #create sequences that will rotate the motor
+        a = [1, 0, 0, 0]
+        b = [1, 1, 0, 0]
+        c = [0, 1, 0, 0]
+        d = [0, 1, 1, 0]
+        e = [0, 0, 1, 0]
+        f = [0, 0, 1, 1]
+        g = [0, 0, 0, 1]
+        h = [1, 0, 0, 1]
+        #put all of the sequences in a master sequence
+        seq = [a, b, c, d, e, f, g, h]
+        
+        #512 is one full turn on the motor
+        for i in range (512):
+            #goes through the sequences on the appropiate pins
+            for halfstep  in range(8):
+                for pin in range(4):
+                    GPIO.output(ControlPin[pin], seq[halfstep][pin])
+                time.sleep(0.001)
+               
+        GPIO.cleanup()
 
 ################
 # Main Program #
