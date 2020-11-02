@@ -13,7 +13,7 @@ from time import sleep
 
 #makes is so the motor abilities can be used or not
 global gpio_on
-gpio_on = False
+gpio_on = True
 
 #Initializes GUI window and Buttons that navigate menues
 class Gui(Canvas):
@@ -252,21 +252,21 @@ class Memory():
         for i in range (6):
             #assigns an image to the front of the card with the same name
             #and location
-            self.assign_images(card_names[j], from_edge, 85)
+            self.assign_images(card_names[j], from_edge, 75)
             #creates buttons with unique names to denote their location
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j]), from_edge, 85, card_names[j])
-            self.assign_images(card_names[j + 1], from_edge, 240)
+                        card_names[j]), from_edge, 75, card_names[j])
+            self.assign_images(card_names[j + 1], from_edge, 225)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 1]), from_edge, 240, card_names[j + 1])
-            self.assign_images(card_names[j + 2], from_edge, 394)
+                        card_names[j + 1]), from_edge, 225, card_names[j + 1])
+            self.assign_images(card_names[j + 2], from_edge, 374)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 2]), from_edge, 394, card_names[j + 2])
+                        card_names[j + 2]), from_edge, 374, card_names[j + 2])
             #adds card names and location in list, x coordinate, and y 
             #coordinate to the dictionary
-            cards[card_names[j]] = [j, from_edge, 85]
-            cards[card_names[j + 1]] = [j + 1, from_edge, 240]
-            cards[card_names[j + 2]] = [j + 2, from_edge, 394]
+            cards[card_names[j]] = [j, from_edge, 75]
+            cards[card_names[j + 1]] = [j + 1, from_edge, 225]
+            cards[card_names[j + 2]] = [j + 2, from_edge, 374]
             #iterates the x axis
             from_edge += 106
             #iterates card location
