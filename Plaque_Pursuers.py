@@ -203,12 +203,9 @@ class MainMenu():
 #Plays the card matching memory game
 class Memory():
     
-<<<<<<< HEAD
-    def __init__(self, ):
-=======
+
     def __init__(self):
         window.title("The Plaque Pursuers: Memory Game")
->>>>>>> 261c1df1501c3fe889649fce3cae5dac99e8b579
         self.delete_buttons()
         #makes a list to contain all labels made
         global labels
