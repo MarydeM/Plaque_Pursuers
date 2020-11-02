@@ -10,7 +10,7 @@ import functools
 from tkinter import *
 import random
 
-#Initializes GUI window and Buttons
+#Initializes GUI window and Buttons that navigate menues
 class Gui(Canvas):
     
     #main Frame Constructor
@@ -68,9 +68,82 @@ class Gui(Canvas):
     def setupGUI(self):
         img = PhotoImage(file = self.img)
         #creates button and gives it functionality
+        button = Button(window, bg = None, image = img, borderwidth = 0, \
+                        highlightthickness = 0, activebackground = None,\
+                        command = self.comnd, name = self.name)
+        #sets button image's name
+        button.image = img
+        #places button using x and y coordinates
+        button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
+        # adds the newly created button to a list
+        button_list.append(button)
+
+    def changeImg(self, img):
+        pass
+
+###This needs to be moved to the Gui class, we need to add a image_index to ever other button as well###
+class Game_Gui(Canvas):
+    
+    #main Frame Constructor
+    def __init__(self, img_index, comnd, xcoord, ycoord, name = None):
+        Canvas.__init__(self)
+        self.img_index = img_index
+        self.comnd = comnd
+        self.xcoord = xcoord
+        self.ycoord = ycoord
+        self.name = name
+        self.setup_Pipe_GUI()
+        
+    #mutators and grabers
+    @property
+    def comnd(self):                   
+        return self._comnd    
+                                      
+    @comnd.setter                      
+    def comnd(self, value):            
+        self._comnd = value
+        
+    @property
+    def img_index(self):                   
+        return self._img_index         
+                                      
+    @img_index.setter                      
+    def img_index(self, value):            
+        self._img_index = value 
+    
+    @property
+    def xcoord(self):                   
+        return self._xcoord         
+                                      
+    @xcoord.setter                      
+    def xcoord(self, value):            
+        self._xcoord = value
+    
+    @property
+    def ycoord(self):                   
+        return self._ycoord      
+                                      
+    @ycoord.setter                      
+    def ycoord(self, value):            
+        self._ycoord = value
+        
+    @property
+    def name(self):                   
+        return self._name   
+                                      
+    @name.setter                      
+    def name(self, value):            
+        self._name = value
+        
+    # sets up indovidual buttons
+    def setup_Pipe_GUI(self):
+        img = pipe_image_list[self.img_index - 1]
+        #creates button and gives it functionality
         button = Button(window, bg = "white", image = img, borderwidth = 0, \
                         highlightthickness = 0, activebackground = "white",\
-                        command = self.comnd, name = self.name)
+                        name = self.name)
+        button.img_index = self.img_index
+        button.configure(command = lambda: self.comnd(button))
         #sets button image's name
         button.image = img
         #places button using x and y coordinates
@@ -129,7 +202,7 @@ class MainMenu():
 #Plays the card matching memory game
 class Memory():
     
-    def __init__(self):
+    def __init__(self, ):
         self.delete_buttons()
         self.make_buttons()
         window.title("The Plaque Pursuers: Memory Game")
@@ -217,7 +290,6 @@ class Pipes():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
-        window.title("The Plaque Pursuers: Pipe Game")
         
     def forget(self):
         pass
@@ -228,27 +300,23 @@ class Pipes():
         Gui("images/back_button.png", self.back_menu, 40, 40)
 
     def setup_game(self):
-        #set the variables for the pipe game
-        grid_length, grid_width = 5, 7 #Length and width of the pipe grid
-        pos_x, pos_y = 150, 150 #starting position of the Pipes
-        Possible_Pipes = ["images/Pipe.png", "images/PipeSideways.png"]
+        #set the variables for the pipe game:
+        #Length and width of the pipe grid
+        grid_length, grid_width = 5, 7 
+        #starting position of the Pipes
+        pos_x, pos_y = 150, 150 
+        Possible_Pipes = [1, 2, 3, 4, 5, 6, 7]
         #creates a basic grid
         for length in range(grid_length):
             pos_x = 150
             for width in range(grid_width):
                 #buttons are created that call the flip_pipe function
-                PipeChoice = random.randint(0, 1)
-                if(PipeChoice == 0):
-                    Button = Gui("images/PipeSideways.png", self.flip_pipe, pos_x, pos_y)
-                elif(PipeChoice == 1):
-                    Button = Gui("images/Pipe.png", self.flip_pipe, pos_x, pos_y)
+                PipeChoice = random.choice(Possible_Pipes)
+                #button is created with the image index being put into the game_gui
+                Button = Game_Gui(PipeChoice, flip_pipe, pos_x, pos_y)
                 pos_x += 75
             pos_y += 75
-
-    def flip_pipe(self):
-        #have the image rotated whenever it is clicked here ###functionality needs to be added###
-        print ("test flip")
-
+            
     def back_menu(self):
         print("moving to menu")
         MainMenu()
@@ -257,9 +325,31 @@ class Pipes():
     def delete_buttons(self):
         for item in button_list:
             item.destroy()
-        #clears the buttons in the list
+        #clears the buttons in the list 
         button_list.clear()
 
+#flip button will be outside class so that button can be passed in
+def flip_pipe(button):
+    #have the image rotated whenever it is clicked here ###functionality needs to be added for "flow"###
+    if(button.img_index == 1):
+        button.img_index = 2
+        button.configure(image = pipe_image_list[button.img_index - 1])
+    elif(button.img_index == 2):
+        button.img_index = 1
+        button.configure(image = pipe_image_list[button.img_index - 1])
+    elif(button.img_index == 3):
+        button.img_index = 4
+        button.configure(image = pipe_image_list[button.img_index - 1])
+    elif(button.img_index == 4):
+        button.img_index = 5
+        button.configure(image = pipe_image_list[button.img_index - 1])
+    elif(button.img_index == 5):
+        button.img_index = 6
+        button.configure(image = pipe_image_list[button.img_index - 1])
+    elif(button.img_index == 6):
+        button.img_index = 3
+        button.configure(image = pipe_image_list[button.img_index - 1])
+        
 ###May delete this later###
 # #Plays the simon memory game
 # class Simon():
@@ -307,6 +397,12 @@ window.title("The Plaque Pursuers")
 # generate the GUI
 p = Canvas(window)
 p.pack(expand = 1, fill = BOTH)
+
+#calls the images for the pipe game after the canvas is created
+pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "images/Pipe2.png"), \
+                   PhotoImage(file = "images/Pipe3.png"), PhotoImage(file = "images/Pipe4.png"), \
+                   PhotoImage(file = "images/Pipe5.png"), PhotoImage(file = "images/Pipe6.png"), \
+                   PhotoImage(file = "images/Pipe7.png")]
 
 #Set background image
 background_image = PhotoImage(file = "images/game_bg.png")
