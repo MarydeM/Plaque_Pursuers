@@ -11,6 +11,10 @@ from tkinter import *
 import random
 from time import sleep
 
+#makes is so the motor abilities can be used or not
+global gpio_on
+gpio_on == False
+
 #Initializes GUI window and Buttons that navigate menues
 class Gui(Canvas):
     
@@ -305,6 +309,8 @@ class Memory():
         card = cards.get(name)[0]
         #hide the card that has been clicked on to reveal its back
         button_list[card + 1].place_forget()
+        #updates the window before flipping the cards back over
+        window.update()
         self.score_counter(name)
         
     def score_counter(self, name):
@@ -334,6 +340,10 @@ class Memory():
                       y = cards.get(chosen_cards[1])[2], \
                       anchor = "center")
                 chosen_cards.clear()
+                #iterate score
+                score += 1
+            if score == 9:
+                Candy()
 
     # deletes all labels and goes to the main menu
     def main_menu(self):
@@ -441,7 +451,8 @@ def flip_pipe(button):
 
 #call this class when a game is won
 class Candy():
-    pass
+    if gpio_on == False:
+        pass
 
 ################
 # Main Program #
