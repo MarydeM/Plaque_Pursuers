@@ -13,7 +13,7 @@ from time import sleep
 
 #makes is so the motor abilities can be used or not
 global gpio_on
-gpio_on == False
+gpio_on = True
 
 #Initializes GUI window and Buttons that navigate menues
 class Gui(Canvas):
@@ -327,6 +327,7 @@ class Memory():
                 chosen_cards.clear()
             #if they do not match, flip cards back over
             else:
+                sleep(1)
                 #Places the card back side by taking the name (chosen_cards) as
                 #a key, finding the values to that key (cards.get())
                 #cards.get[0] = list location, cards.get[1] = x coordinate,
@@ -340,10 +341,9 @@ class Memory():
                       y = cards.get(chosen_cards[1])[2], \
                       anchor = "center")
                 chosen_cards.clear()
-                #iterate score
-                score += 1
+            #once all the cards are matched, give candy
             if score == 9:
-                Candy()
+                Candy.dispense()
 
     # deletes all labels and goes to the main menu
     def main_menu(self):
@@ -451,42 +451,44 @@ def flip_pipe(button):
 
 #call this class when a game is won
 class Candy():
-    if gpio_on == False:
-        pass
     
-    if gpio_on == True:
-        import RPi.GPIO as GPIO
+    def dispense():
+        if gpio_on == False:
+            pass
         
-        #set up pins and assign numbers to them  
-        GPIO.setmode(GPIO.BCM)
-        
-        ControlPin = [18, 21, 24, 27]
-        
-        for pin in ControlPin:
-            GPIO.setup(pin, GPIO.OUT)
-            GPIO.output(pin, 0)
-        
-        #create sequences that will rotate the motor
-        a = [1, 0, 0, 0]
-        b = [1, 1, 0, 0]
-        c = [0, 1, 0, 0]
-        d = [0, 1, 1, 0]
-        e = [0, 0, 1, 0]
-        f = [0, 0, 1, 1]
-        g = [0, 0, 0, 1]
-        h = [1, 0, 0, 1]
-        #put all of the sequences in a master sequence
-        seq = [a, b, c, d, e, f, g, h]
-        
-        #512 is one full turn on the motor
-        for i in range (512):
-            #goes through the sequences on the appropiate pins
-            for halfstep  in range(8):
-                for pin in range(4):
-                    GPIO.output(ControlPin[pin], seq[halfstep][pin])
-                time.sleep(0.001)
-               
-        GPIO.cleanup()
+        if gpio_on == True:
+            import RPi.GPIO as GPIO
+            
+            #set up pins and assign numbers to them  
+            GPIO.setmode(GPIO.BCM)
+            
+            ControlPin = [18, 21, 24, 27]
+            
+            for pin in ControlPin:
+                GPIO.setup(pin, GPIO.OUT)
+                GPIO.output(pin, 0)
+            
+            #create sequences that will rotate the motor
+            a = [1, 0, 0, 0]
+            b = [1, 1, 0, 0]
+            c = [0, 1, 0, 0]
+            d = [0, 1, 1, 0]
+            e = [0, 0, 1, 0]
+            f = [0, 0, 1, 1]
+            g = [0, 0, 0, 1]
+            h = [1, 0, 0, 1]
+            #put all of the sequences in a master sequence
+            seq = [a, b, c, d, e, f, g, h]
+            
+            #512 is one full turn on the motor
+            for i in range (512):
+                #goes through the sequences on the appropiate pins
+                for halfstep  in range(8):
+                    for pin in range(4):
+                        GPIO.output(ControlPin[pin], seq[halfstep][pin])
+                    sleep(0.001)
+                   
+            GPIO.cleanup()
 
 ################
 # Main Program #
