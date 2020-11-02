@@ -13,7 +13,7 @@ from time import sleep
 
 #makes is so the motor abilities can be used or not
 global gpio_on
-gpio_on = True
+gpio_on = False
 
 #Initializes GUI window and Buttons that navigate menues
 class Gui(Canvas):
@@ -169,9 +169,9 @@ class MainMenu():
     #creates buttons
     def make_buttons(self):
         #left button goes to pipes game
-        Gui("images/pipes.png", self.pipes, 200, 300)
+        Gui("images/pipes.png", self.pipes, 200, 250)
         #right button goes to memory game
-        Gui("images/memory.png", self.memory, 600, 300)
+        Gui("images/memory.png", self.memory, 600, 250)
         # #middle button to move to simon
         # Gui("images/test.png", self.simon, 400, 300)
         #back button closes the game from this menu, typically just 
@@ -246,29 +246,29 @@ class Memory():
             card_names.append(b)
             card_names.append(c)
         #distance of cards from the left screen edge
-        from_edge = 108
+        from_edge = 139
         #card location
         j = 0
         for i in range (6):
             #assigns an image to the front of the card with the same name
             #and location
-            self.assign_images(card_names[j], from_edge, 140)
+            self.assign_images(card_names[j], from_edge, 85)
             #creates buttons with unique names to denote their location
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j]), from_edge, 140, card_names[j])
-            self.assign_images(card_names[j + 1], from_edge, 310)
+                        card_names[j]), from_edge, 85, card_names[j])
+            self.assign_images(card_names[j + 1], from_edge, 240)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 1]), from_edge, 310, card_names[j + 1])
-            self.assign_images(card_names[j + 2], from_edge, 481)
+                        card_names[j + 1]), from_edge, 240, card_names[j + 1])
+            self.assign_images(card_names[j + 2], from_edge, 394)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 2]), from_edge, 481, card_names[j + 2])
+                        card_names[j + 2]), from_edge, 394, card_names[j + 2])
             #adds card names and location in list, x coordinate, and y 
             #coordinate to the dictionary
-            cards[card_names[j]] = [j, from_edge, 140]
-            cards[card_names[j + 1]] = [j + 1, from_edge, 310]
-            cards[card_names[j + 2]] = [j + 2, from_edge, 481]
+            cards[card_names[j]] = [j, from_edge, 85]
+            cards[card_names[j + 1]] = [j + 1, from_edge, 240]
+            cards[card_names[j + 2]] = [j + 2, from_edge, 394]
             #iterates the x axis
-            from_edge += 115
+            from_edge += 106
             #iterates card location
             j += 3
     
@@ -318,7 +318,6 @@ class Memory():
         #keeps track of the cards that have been flipped
         if len(chosen_cards) < 2:
             chosen_cards.append(name)
-            print (chosen_cards)
         #if two cards have been selected, check to see if the images match
         if len(chosen_cards) == 2:
             if label_names.get(chosen_cards[0]) == label_names.get(chosen_cards[1]):
@@ -497,8 +496,8 @@ class Candy():
 button_list = []
 
 #window resolution
-#800x600 is Fullscreen on a rasp. pi
-WIDTH, HEIGHT = 800, 600
+#800x480 is Fullscreen on a rasp. pi
+WIDTH, HEIGHT = 800, 480
 
 # create the window
 window = Tk()
