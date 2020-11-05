@@ -1,6 +1,6 @@
 # Plaque Pursuers CSC 132 Final Project
 # Contributers: Chloe, Mary
-# Last Updated: 10/22/2020
+# Last Updated: 11/05/2020
 ##############################################################################
 
 ### the three pound signs means it is a note to delete later ###
@@ -70,7 +70,7 @@ class Gui(Canvas):
     def name(self, value):            
         self._name = value
         
-    # sets up indovidual buttons
+    # sets up individual buttons
     def setupGUI(self):
         img = PhotoImage(file = self.img)
         #creates button and gives it functionality
@@ -83,7 +83,8 @@ class Gui(Canvas):
         button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
         # adds the newly created button to a list
         button_list.append(button)
-
+        
+    ### Is this still a WIP? ###
     def changeImg(self, img):
         pass
 
@@ -194,11 +195,9 @@ class MainMenu():
     #creates buttons
     def make_buttons(self):
         #left button goes to pipes game
-        Gui("images/pipes.png", self.pipes, 200, 300)
+        Gui("images/pipes.png", self.pipes, 200, 250)
         #right button goes to memory game
-        Gui("images/memory.png", self.memory, 600, 300)
-        # #middle button to move to simon
-        # Gui("images/test.png", self.simon, 400, 300)
+        Gui("images/memory.png", self.memory, 600, 250)
         #back button closes the game from this menu, typically just 
         #previous menu button
         Gui("images/back_button.png", self.quit_game, 40, 40)
@@ -239,7 +238,7 @@ class Memory():
         #makes a list to contain all labels made
         global labels
         labels = []
-        #makes a dictionary of the label names and locations
+        #makes a dictionary of the label names and images
         global label_names
         label_names = {}
         # keeps a list of the cards that have been flipped
@@ -248,6 +247,10 @@ class Memory():
         #keeps score of cards matched
         global score
         score = 0
+        #counts lives
+        global lives
+        global lives_left
+        lives_left = 15
         #gets card images
         self.get_images()
         self.make_buttons()
@@ -256,6 +259,12 @@ class Memory():
     def make_buttons(self):
         #makes back button
         Gui("images/back_button.png", self.main_menu, 40, 40)
+        #makes life counter
+        global lives_left
+        global lives
+        lives = Label(window, text = "Lives Left \n" + str(lives_left), \
+                      bg = "white", borderwidth = 2, relief = "raised")
+        lives.place(x = 735, y = 40)
         #creates golbal a dictionary with card names as keys and 
         #card location as values
         global cards
@@ -271,29 +280,29 @@ class Memory():
             card_names.append(b)
             card_names.append(c)
         #distance of cards from the left screen edge
-        from_edge = 108
+        from_edge = 140
         #card location
         j = 0
         for i in range (6):
             #assigns an image to the front of the card with the same name
             #and location
-            self.assign_images(card_names[j], from_edge, 140)
+            self.assign_images(card_names[j], from_edge, 90)
             #creates buttons with unique names to denote their location
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j]), from_edge, 140, card_names[j])
-            self.assign_images(card_names[j + 1], from_edge, 310)
+                        card_names[j]), from_edge, 90, card_names[j])
+            self.assign_images(card_names[j + 1], from_edge, 245)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 1]), from_edge, 310, card_names[j + 1])
-            self.assign_images(card_names[j + 2], from_edge, 481)
+                        card_names[j + 1]), from_edge, 245, card_names[j + 1])
+            self.assign_images(card_names[j + 2], from_edge, 400)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 2]), from_edge, 481, card_names[j + 2])
+                        card_names[j + 2]), from_edge, 400, card_names[j + 2])
             #adds card names and location in list, x coordinate, and y 
             #coordinate to the dictionary
-            cards[card_names[j]] = [j, from_edge, 140]
-            cards[card_names[j + 1]] = [j + 1, from_edge, 310]
-            cards[card_names[j + 2]] = [j + 2, from_edge, 481]
+            cards[card_names[j]] = [j, from_edge, 90]
+            cards[card_names[j + 1]] = [j + 1, from_edge, 245]
+            cards[card_names[j + 2]] = [j + 2, from_edge, 400]
             #iterates the x axis
-            from_edge += 115
+            from_edge += 108
             #iterates card location
             j += 3
     
@@ -312,47 +321,53 @@ class Memory():
         #chooses a random image
         img = random.choice(images)
         picture = PhotoImage(file = img)
-        # adds the name of the image as the value; uses the name of the card
-        # location (i.e.: a0) as the key
-        label_names[name] = img
-        #makes a label with the image and turns "name" into an actual label
-        name = Label(window, image = picture)
+        #makes a label with the image and turns "lab" into the actual label
+        lab = Label(window, image = picture)
         #anchors image to label
-        name.photo = picture
-        name.place(x = x, y = y, anchor = "center")
-        # Gui(image, functools.partial(None, name), x, y, name)
+        lab.photo = picture
+        lab.place(x = x, y = y, anchor = "center")
+        # adds the name of the image and the label as the value; uses the \
+        #name of the card location (i.e.: a0) as the key
+        label_names[name] = [img, lab]
         #removes the image from the list so it can not be used again
         images.remove(img)
-        # adds the name of the image as the value; uses the name of the card
-        # location (i.e.: a0) as the key
-        labels.append(name)    
+        # adds the label to a list for easy deletion later
+        labels.append(lab)
         
     #flips a card over by recieving name as input
     #checks for a card match
     def flip(self, name):
+        global lives_left
         #finds card's location in the list with the dictionary
         card = cards.get(name)[0]
-        #hide the card that has been clicked on to reveal its back
-        button_list[card + 1].place_forget()
-        #updates the window before flipping the cards back over
-        window.update()
-        self.score_counter(name)
+        #hide the card that has been clicked on to reveal its back, only while
+        #the game is being played
+        if lives_left > 0:
+            button_list[card + 1].place_forget()
+            #updates the window before flipping the cards back over
+            window.update()
+            self.score_counter(name)
         
     def score_counter(self, name):
         global score
         #keeps track of the cards that have been flipped
         if len(chosen_cards) < 2:
             chosen_cards.append(name)
-            print (chosen_cards)
         #if two cards have been selected, check to see if the images match
         if len(chosen_cards) == 2:
-            if label_names.get(chosen_cards[0]) == label_names.get(chosen_cards[1]):
-                #if they match, iterate the score and clear the selected cards
+            if label_names.get(chosen_cards[0])[0] == label_names.get(chosen_cards[1])[0]:
+                #if they match, highlight the cards chosen
+                label_names.get(chosen_cards[0])[1].config(borderwidth = 4, \
+                            relief = "groove")
+                label_names.get(chosen_cards[1])[1].config(borderwidth = 4, \
+                            relief = "groove")
+                #iterate the score and clear the selected cards
                 score += 1
                 chosen_cards.clear()
             #if they do not match, flip cards back over
             else:
-                #Places the card back side by taking the name (chosen_cards) as
+                sleep(1)
+                #Places the card's back side by taking the name (chosen_cards) as
                 #a key, finding the values to that key (cards.get())
                 #cards.get[0] = list location, cards.get[1] = x coordinate,
                 #cards.get[2] = y coordinate
@@ -365,8 +380,14 @@ class Memory():
                       y = cards.get(chosen_cards[1])[2], \
                       anchor = "center")
                 chosen_cards.clear()
-                #iterate score
-                score += 1
+                # Take away a life
+                global lives_left
+                lives_left -= 1
+                lives.configure(text = "Lives Left \n" + str(lives_left))
+            #Tell the player the game is over
+            if lives_left == 0:
+                lives.configure(text = "Game \n Over")
+            #Dispense candy when the GPIO is on
             if score == 9:
                 Candy()
 
@@ -375,6 +396,7 @@ class Memory():
         global labels
         for item in labels:
             item.destroy()
+        lives.destroy()
         print("moving to menu")
         MainMenu()
 
@@ -823,28 +845,6 @@ def flip_pipe(button):
 ##        #turn on the motor and dispense candy
 ##        Candy()
 ##        print("win state")
-        
-###May delete this later###
-# #Plays the simon memory game
-# class Simon():
-    
-#     def __init__(self):
-#         self.delete_buttons()
-#         self.make_buttons()
-#         window.title("The Plaque Pursuers: Simon Says")
-    
-#     #creates buttons
-#     def make_buttons(self):
-#         Gui("images/back_button.png", self.back_menu, 40, 40)
-
-#     def back_menu(self):
-#         print("moving to menu")
-#         MainMenu()
-    
-#     #deletes all buttons on the page    
-#     def delete_buttons(self):
-#         for item in button_list:
-#             item.destroy()
 
 #call this class when a game is won
 class Candy():
