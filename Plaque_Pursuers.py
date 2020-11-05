@@ -405,8 +405,8 @@ class Pipes():
         Gui("images/back_button.png", self.back_menu, 40, 40)
         #create the flow
         Gui("images/flow.png", None, 150, 100)
-        #Sink, 30 is end goal, it is an arbitrary number
-        Game_Gui(15, 30, False, flip_pipe, 750, 100)
+        #Sink, -30 is end goal, it is an arbitrary number
+        Game_Gui(15, -30, False, flip_pipe, 750, 100)
 
     def setup_game(self):
         #set the variables for the pipe game:
@@ -431,19 +431,20 @@ class Pipes():
                 PipeChoice = random.choice(Possible_Pipes)
                 #button is created with the image index being put into the game_gui
                 #if the board is board1, create this board
+                board_choice = 1
                 if(board_choice == 1):
                     #draw specific pattern
                     if(location <= 2):
                         Button = Game_Gui(1, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 3):
-                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 10):
                         Button = Game_Gui(2, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 17):
                         Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 18):
                         Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
-                    elif(location == 12) and (location == 13):
+                    elif(location == 12) or (location == 13):
                         Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 7):
                         Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
@@ -457,7 +458,7 @@ class Pipes():
                         Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 14):
                         Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
-                    #fill rest randomly
+                    #fill rest
                     else:
                         Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
                 elif(board_choice == 2):
@@ -498,20 +499,126 @@ class Pipes():
 
 #flip button will be outside class so that button can be passed in
 def flip_pipe(button):
-    #have the image rotated whenever it is clicked here ###functionality needs to be added for "flow"###
-    #end goal/the sink
-    if(button.location == 30):
-        #skip so nothing happens once the button is pressed
+    print(button.pipe_connected)
+    #the image index is one above the actual number in the index!!
+    #have the image rotated whenever it is clicked here
+    #end goal/the sink, does nothing when pressed
+    if(button.location == -30):
         return
-    #if the final pipe is true
-    if(made_pipes[6].pipe_connected == True):
-        #set the sink to True
-        made_pipes[30].pipe_connected = True
-        button.img_index = 9
-        button.configure(image = pipe_image_list[button.img_index - 1])
-        Candy()
+    #go through the for loop every time a button is pressed to know if a true statement needs to change
+    for check in made_pipes:
+        #check to the left of the current checking pipe
+        #if true to left, make true
+        if(made_pipes[check.location - 2].pipe_connected == True):
+            #check left most pipe
+            if(made_pipes[check.location - 2].img_index == 9) or (made_pipes[check.location - 2].img_index == 10)\
+                or (made_pipes[check.location - 2].img_index == 11) \
+                or (made_pipes[check.location - 2].img_index == 14):
+                #if image is horizontal no flow
+                if(made_pipes[check.location - 1].img_index == 2):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 9
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #west and north pipe
+                elif(made_pipes[check.location - 1].img_index == 5):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 12
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #west and south pipe
+                elif(made_pipes[check.location - 1].img_index == 6):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 13
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #4 way
+                elif(made_pipes[check.location - 1].img_index == 7):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 14
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+        #if true above, make true
+        try:
+            if(made_pipes[check.location - 8].pipe_connected == True):
+                if(made_pipes[check.location - 8].img_index == 8) or (made_pipes[check.location - 8].img_index == 10)\
+                    or (made_pipes[check.location - 8].img_index == 13) \
+                    or (made_pipes[check.location - 8].img_index == 14):
+                    #if image is vertical no flow
+                    if(made_pipes[check.location - 1].img_index == 1):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 8
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #west and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 5):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 12
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #east and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 4):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 11
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #4 way
+                    elif(made_pipes[check.location - 1].img_index == 7):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 14
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+        except:
+            pass
+        #if true below, make true
+        try:
+            if(made_pipes[check.location + 6].pipe_connected == True):
+                #check pipe below
+                if(made_pipes[check.location + 6].img_index == 8) or (made_pipes[check.location + 6].img_index == 11)\
+                    or (made_pipes[check.location + 6].img_index == 12) \
+                    or (made_pipes[check.location + 6].img_index == 14):
+                    #if image is vertical no flow
+                    if(made_pipes[check.location - 1].img_index == 1):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 8
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #west and south pipe
+                    elif(made_pipes[check.location - 1].img_index == 6):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 13
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #east and south pipe
+                    elif(made_pipes[check.location - 1].img_index == 3):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 10
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #4 way
+                    elif(made_pipes[check.location - 1].img_index == 7):
+                        made_pipes[check.location - 1].pipe_connected = True
+                        made_pipes[check.location - 1].img_index = 14
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+        except:
+            pass
+        #if right true
+        if(made_pipes[check.location].pipe_connected == True):
+            #check right most pipe
+            if(made_pipes[check.location].img_index == 9) or (made_pipes[check.location].img_index == 12)\
+                or (made_pipes[check.location].img_index == 13) \
+                or (made_pipes[check.location].img_index == 14):
+                #if image is horizontal no flow
+                if(made_pipes[check.location - 1].img_index == 2):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 9
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #north and east
+                elif(made_pipes[check.location - 1].img_index == 4):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 11
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #east and south pipe
+                elif(made_pipes[check.location - 1].img_index == 3):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 10
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+                #4 way
+                elif(made_pipes[check.location - 1].img_index == 7):
+                    made_pipes[check.location - 1].pipe_connected = True
+                    made_pipes[check.location - 1].img_index = 14
+                    check.configure(image = pipe_image_list[check.img_index - 1])
+    #These are pipes with no flow
     if(button.img_index == 1):
-        #set image index to whatever img_index = to.
         button.img_index = 2 
         button.configure(image = pipe_image_list[button.img_index - 1])
     elif(button.img_index == 2):
@@ -529,118 +636,193 @@ def flip_pipe(button):
     elif(button.img_index == 6):
         button.img_index = 3
         button.configure(image = pipe_image_list[button.img_index - 1])
-    #check pipe above
-    if(made_pipes[button.location - 8].pipe_connected == True):
-        if(made_pipes[button.location - 9].img_index == 9):
-            if(button.img_index == 1):
-                button.pipe_connected = True
-                button.img_index = 8 
+    #if the pipe currently has flow and is clicked
+    if(button.pipe_connected == True):
+        if(made_pipes[button.location - 2].pipe_connected == True):
+            if(button.img_index == 9) and (made_pipes[button.location - 8].pipe_connected == False):
+                button.pipe_connected = False
+                button.img_index = 1
                 button.configure(image = pipe_image_list[button.img_index - 1])
-    print(button.location)
-    #print previous states
-    print("left: "  + str(made_pipes[button.location - 2].pipe_connected))
-    print("above: " + str(made_pipes[button.location - 8].pipe_connected))
-    print("right: " + str(made_pipes[button.location].pipe_connected))
-    print("below: " + str(made_pipes[button.location + 6].pipe_connected))
-    print("self was: "  + str(button.pipe_connected))
-    print("location: " + str(button.location))
-    ###this is a mess, i didnt have time to clear out everything that is unnecessary###
-    #check pipe to left, except when on edge
+                return
+            elif(button.img_index == 9) and (made_pipes[button.location - 8].pipe_connected == True):
+                button.img_index = 8
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+            if(button.img_index == 12):
+                button.img_index = 13
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+            elif(button.img_index == 13):
+                button.pipe_connected = False
+                button.img_index = 3
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+    #check pipe to left, except when on left edge
     if(made_pipes[button.location - 2].pipe_connected == True) and (button.location != 8) \
         and (button.location != 15) and (button.location != 22) and (button.location != 29):
-        if(made_pipes[button.location - 2].img_index == 9) or (made_pipes[button.location - 2].img_index == 14):
+        #if pipe to the left is Pipe2/horiontal pipe or 4 way
+        if(made_pipes[button.location - 2].img_index == 9):
+            #if current pipe is unflowing horizontal, make flow
             if(button.img_index == 2):
                 button.pipe_connected = True
                 button.img_index = 9
                 button.configure(image = pipe_image_list[button.img_index - 1])
-                if(button.location == 7):
-                    made_pipes[30].pipe_connected = True
-                    button.img_index = 9
-                    button.configure(image = pipe_image_list[button.img_index - 1])
-                    Candy()
-                    print("win")
                 return
+            #unflowing east to north
             elif(button.img_index == 5):
                 button.pipe_connected = True
                 button.img_index = 12
                 button.configure(image = pipe_image_list[button.img_index - 1])
                 return
+            #unflowing east to south
             elif(button.img_index == 6):
                 button.pipe_connected = True
                 button.img_index = 13
                 button.configure(image = pipe_image_list[button.img_index - 1])
                 return
-            elif(button.img_index == 7):
+    #check if the clicking button is true
+    if(made_pipes[button.location - 1].pipe_connected == True):
+        #check if the left most one is true
+        if(made_pipes[button.location - 2].pipe_connected == True) and (button.location != 8) \
+            and (button.location != 15) and (button.location != 22) and (button.location != 29):
+            #horizontal
+            if(made_pipes[button.location - 1].img_index == 9):
                 button.pipe_connected = True
-                button.img_index = 14
+                button.img_index = 1
                 button.configure(image = pipe_image_list[button.img_index - 1])
                 return
-    #reset, check left
-    if(made_pipes[button.location - 1].pipe_connected == True):
-        #if left no longer connected, stop
-        if(made_pipes[button.location - 2].pipe_connected == False):
-            if(button.img_index == 9):
-                button.pipe_connected = False
-                button.img_index = 2
+            #west and up
+            elif(made_pipes[button.location - 1].img_index == 12):
+                button.img_index = 13
                 button.configure(image = pipe_image_list[button.img_index - 1])
-                if(made_pipes[button.location - 9].pipe_connected == True) and \
-                    (made_pipes[button.location - 9].img_index == 9) or \
-                    (made_pipes[button.location - 9].img_index == 13) or \
-                    (made_pipes[button.location - 9].img_index == 14):
-                    button.pipe_connected = True
-                    button.img_index = 8
-                    button.configure(image = pipe_image_list[button.img_index - 1])                    
-            elif(button.img_index == 12):
+                return
+            #west and south
+            elif(made_pipes[button.location - 1].img_index == 13):
                 button.pipe_connected = False
-                button.img_index = 5
+                button.img_index = 3
                 button.configure(image = pipe_image_list[button.img_index - 1])
-                if(made_pipes[button.location - 2].pipe_connected == True):
-                    button.pipe_connected = True
-                    button.img_index = 13
-                    button.configure(image = pipe_image_list[button.img_index - 1])
-            elif(button.img_index == 13):
-                button.pipe_connected = False
-                button.img_index = 6
-                button.configure(image = pipe_image_list[button.img_index - 1])
-            elif(button.img_index == 14):
+                return
+            #4 way
+            elif(made_pipes[button.location - 1].img_index == 14):
                 button.pipe_connected = False
                 button.img_index = 7
                 button.configure(image = pipe_image_list[button.img_index - 1])
-        #click current pipe, spin
-        if(button.img_index == 9):
-            button.pipe_connected = False
-            button.img_index = 1
-            button.configure(image = pipe_image_list[button.img_index - 1])
-            if(made_pipes[button.location - 9].pipe_connected == True) and \
-                (made_pipes[button.location - 9].img_index == 9) or \
-                (made_pipes[button.location - 9].img_index == 12):
-                pass  
-        elif(button.img_index == 12):
-            button.pipe_connected = False
-            button.img_index = 6
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 13):
-            button.pipe_connected = False
-            button.img_index = 3
-            button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+        #check if the right most one is true
+        if(made_pipes[button.location].pipe_connected == True):
+            #horizontal
+            if(made_pipes[button.location - 1].img_index == 9):
+                button.pipe_connected = True
+                button.img_index = 1
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+            #east and up
+            elif(made_pipes[button.location - 1].img_index == 11):
+                button.pipe_connected = False
+                button.img_index = 5
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+            #south and east
+            elif(made_pipes[button.location - 1].img_index == 10):
+                button.img_index = 11
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+            #4 way
+            elif(made_pipes[button.location - 1].img_index == 14):
+                button.pipe_connected = False
+                button.img_index = 7
+                button.configure(image = pipe_image_list[button.img_index - 1])
+                return
+        #try above most one
+        try:
+            if(made_pipes[check.location - 8].pipe_connected == True):
+                if(made_pipes[check.location - 8].img_index == 8) or (made_pipes[check.location - 8].img_index == 11)\
+                    or (made_pipes[check.location - 8].img_index == 13) \
+                    or (made_pipes[check.location - 8].img_index == 14):
+                    #if image is vertical no flow
+                    if(made_pipes[check.location - 1].img_index == 8):
+                        made_pipes[check.location - 1].pipe_connected = False
+                        made_pipes[check.location - 1].img_index = 2
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #west and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 12):
+                        made_pipes[check.location - 1].pipe_connected = False
+                        made_pipes[check.location - 1].img_index = 6
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #east and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 11):
+                        made_pipes[check.location - 1].img_index = 12
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+        except:
+            pass
+        #try below most one
+        try:
+            if(made_pipes[check.location + 6].pipe_connected == True):
+                if(made_pipes[check.location + 6].img_index == 8) or (made_pipes[check.location + 6].img_index == 11)\
+                    or (made_pipes[check.location + 6].img_index == 12) \
+                    or (made_pipes[check.location + 6].img_index == 14):
+                    #if image is vertical no flow
+                    if(made_pipes[check.location - 1].img_index == 8):
+                        made_pipes[check.location - 1].pipe_connected = False
+                        made_pipes[check.location - 1].img_index = 2
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #west and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 12):
+                        made_pipes[check.location - 1].pipe_connected = False
+                        made_pipes[check.location - 1].img_index = 6
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                    #east and north pipe
+                    elif(made_pipes[check.location - 1].img_index == 11):
+                        made_pipes[check.location - 1].img_index = 12
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+        except:
+            pass
     #check first spot in grid
     if(button.location == 1):
+        #if horizontal, flow
         if(button.img_index == 2):
             button.pipe_connected = True
             button.img_index = 9
             button.configure(image = pipe_image_list[button.img_index - 1])
+            return
+        #if left to up, rotate
         elif(button.img_index == 5):
+            button.pipe_connected = True
             button.img_index = 12
             button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 6):
+            return
+        elif(button.img_index == 12):
             button.img_index = 13
             button.configure(image = pipe_image_list[button.img_index - 1])
-
-        
-##    elif(made_pipes[0].img_index == 5):
-##        button.img_index = 12
-##    elif(made_pipes[0].img_index == 6):
-##        button.img_index = 13
+            return
+        if(button.img_index == 9):
+            button.pipe_connected = False
+            button.img_index = 1
+            button.configure(image = pipe_image_list[button.img_index - 1])
+            return
+        elif(button.img_index == 12):
+            button.img_index = 13
+            button.configure(image = pipe_image_list[button.img_index - 1])
+            return
+        elif(button.img_index == 13):
+            button.pipe_connected = False
+            button.img_index = 3
+            button.configure(image = pipe_image_list[button.img_index - 1])
+            return
+        elif(button.img_index == 7):
+            button.img_index = 14
+            button.configure(image = pipe_image_list[button.img_index - 1])
+            return
+##    #if the current location is 7, make pipes[30]
+##    if(button.location == 7) and (button.pipe_connected == True) and \
+##        (button.img_index == 9) or (button.img_index == 10) or (button.img_index == 14):
+##        made_pipes[-30].pipe_connected = True
+##        #change end pipe's image index to light sink
+##        made_pipes[-30].img_index = 16
+##        made_pipes[-30].configure(image = pipe_image_list[button.img_index - 1])
+##        #turn on the motor and dispense candy
+##        Candy()
+##        print("win state")
         
 ###May delete this later###
 # #Plays the simon memory game
