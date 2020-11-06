@@ -411,6 +411,16 @@ class Memory():
 class Pipes():
     
     def __init__(self):
+        global pipe_image_list
+        pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "images/Pipe2.png"), \
+                   PhotoImage(file = "images/Pipe3.png"), PhotoImage(file = "images/Pipe4.png"), \
+                   PhotoImage(file = "images/Pipe5.png"), PhotoImage(file = "images/Pipe6.png"), \
+                   PhotoImage(file = "images/Pipe7.png"), PhotoImage(file = "images/Pipe1_light.png"), \
+                   PhotoImage(file = "images/Pipe2_light.png"), PhotoImage(file = "images/Pipe3_light.png"), \
+                   PhotoImage(file = "images/Pipe4_light.png"), PhotoImage(file = "images/Pipe5_light.png"), \
+                   PhotoImage(file = "images/Pipe6_light.png"), PhotoImage(file = "images/Pipe7_light.png"), \
+                   PhotoImage(file = "images/sink.png"), PhotoImage(file = "images/sink_light.png"), \
+                   PhotoImage(file = "images/flow.png"), PhotoImage(file = "images/start_flow.png")]
         self.delete_buttons()
         self.make_buttons()
     
@@ -529,6 +539,8 @@ class Pipes():
                 pos_x += 75
             #moves y cord by 75 for next y
             pos_y += 75
+        ###at the end create the timer widget
+        pass
 
     #return to main menu if back button is pressed
     def back_menu(self):
@@ -939,17 +951,6 @@ window.title("The Plaque Pursuers")
 # generate the GUI
 p = Canvas(window)
 p.pack(expand = 1, fill = BOTH)
-
-#calls the images for the pipe game after the canvas is created as a global variable
-pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "images/Pipe2.png"), \
-                   PhotoImage(file = "images/Pipe3.png"), PhotoImage(file = "images/Pipe4.png"), \
-                   PhotoImage(file = "images/Pipe5.png"), PhotoImage(file = "images/Pipe6.png"), \
-                   PhotoImage(file = "images/Pipe7.png"), PhotoImage(file = "images/Pipe1_light.png"), \
-                   PhotoImage(file = "images/Pipe2_light.png"), PhotoImage(file = "images/Pipe3_light.png"), \
-                   PhotoImage(file = "images/Pipe4_light.png"), PhotoImage(file = "images/Pipe5_light.png"), \
-                   PhotoImage(file = "images/Pipe6_light.png"), PhotoImage(file = "images/Pipe7_light.png"), \
-                   PhotoImage(file = "images/sink.png"), PhotoImage(file = "images/sink_light.png"), \
-                   PhotoImage(file = "images/flow.png"), PhotoImage(file = "images/start_flow.png")]
 
 #Set background image
 background_image = PhotoImage(file = "images/game_bg.png")
