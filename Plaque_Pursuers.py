@@ -431,6 +431,8 @@ class Pipes():
         flow = Game_Gui(18, -50, False, Flow, 450, 30)
 
     def setup_game(self):
+        global pipe_win
+        pipe_win = False
         #set the variables for the pipe game:
         #Length and width of the pipe grid
         grid_length, grid_width = 5, 7 
@@ -521,66 +523,66 @@ class Pipes():
 
 #flip button will be outside class so that button can be passed in
 def flip_pipe(button):
-    print(button.location)
-    print(len(made_pipes))
-    #the image index is one above the actual number in the index!!
-    #have the image rotated whenever it is clicked here
-    #end goal/the sink, does nothing when pressed
-    if(button.location == 40):
-        return
-    #These are pipes with no flow
-    if(button.img_index == 1):
-        button.img_index = 2 
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 2):
-        button.img_index = 1
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 3):
-        button.img_index = 4
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 4):
-        button.img_index = 5
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 5):
-        button.img_index = 6
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 6):
-        button.img_index = 3
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    #These are pipes with flow
-    if(button.img_index == 8):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 2 
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 9):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 1
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 10):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 4
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 11):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 5
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 12):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 6
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 13):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 3
-        button.configure(image = pipe_image_list[button.img_index - 1])
-    elif(button.img_index == 14):
-        made_pipes[button.location - 1].pipe_connected = False
-        button.img_index = 7
-        button.configure(image = pipe_image_list[button.img_index - 1])
+    global pipe_win
+    if(pipe_win == False):
+        #the image index is one above the actual number in the index!!
+        #have the image rotated whenever it is clicked here
+        #end goal/the sink, does nothing when pressed
+        if(button.location == 40):
+            return
+        #These are pipes with no flow
+        if(button.img_index == 1):
+            button.img_index = 2 
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 2):
+            button.img_index = 1
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 3):
+            button.img_index = 4
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 4):
+            button.img_index = 5
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 5):
+            button.img_index = 6
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 6):
+            button.img_index = 3
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        #These are pipes with flow
+        if(button.img_index == 8):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 2 
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 9):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 1
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 10):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 4
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 11):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 5
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 12):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 6
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 13):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 3
+            button.configure(image = pipe_image_list[button.img_index - 1])
+        elif(button.img_index == 14):
+            made_pipes[button.location - 1].pipe_connected = False
+            button.img_index = 7
+            button.configure(image = pipe_image_list[button.img_index - 1])
 
 #the flow button will activate this function
 def Flow(button):
+    global pipe_win
     #when the game is won, change to True
-    win = False
     #go through the for loop multiple times so the flow and move
     for number in range(0, 10):
         #go through the for loop every time a button is pressed to know if a true statement needs to change
@@ -595,15 +597,17 @@ def Flow(button):
                         (made_pipes[check.location - 1].img_index == 10) or \
                         (made_pipes[check.location - 1].img_index == 7) or \
                         (made_pipes[check.location - 1].img_index == 14):
-                        if(win == True):
+                        #skip if already won
+                        if(pipe_win == True): 
                             break
                         check.img_index += 7
                         check.configure(image = pipe_image_list[check.img_index - 1])
-                        win = True
+                        pipe_win = True
                         #index 37 is the final button
                         made_pipes[35].img_index = 16
                         made_pipes[35].configure(image = pipe_image_list[made_pipes[35].img_index - 1])
                         print("You win")
+                        #break out of loop if you win
                         break
             #check to the left of the current checking pipe
             #if true to left, make true except when on edge
@@ -799,24 +803,27 @@ def Flow(button):
                 pass
     #have a slight pause before flow stops
     window.update()
+    sleep(1.5)
     #the game is won at this point! dispense candy
-    if(win == True):
-##        made_pipes[-30].img_index = 16
-##        made_pipes[-30].configure(image = pipe_image_list[made_pipes[-30].img_index - 1])
-##        made_pipes[6].img_index += 6
-##        made_pipes[6].configure(image = pipe_image_list[made_pipes[6].img_index - 1])
-        print("dispensing candy")
+    if(pipe_win == True):
+        print("dispensing candy\nThe only thing you can do now is return to menu")
         Candy()
-        
+        #wait 5 seconds after winning before returning to menu
+        sleep(5)
+        #delete the rectangle
+        global rect
+        p.delete(rect)
+        #return to Menu
+        Pipes().back_menu()
     #if the game is not over, change back to regular pipes
-##    if(win == False):
-##        #for loop, clean up any flow if game not over
-##        for number in range(0, 6):
-##            for check in made_pipes:
-##                if(check.img_index > 7) and (check.img_index < 15):
-##                    made_pipes[check.location - 1].pipe_connected = False
-##                    made_pipes[check.location - 1].img_index -= 7
-##                    check.configure(image = pipe_image_list[check.img_index - 1])
+    if(pipe_win == False):
+        #for loop, clean up any flow if game not over
+        for number in range(0, 6):
+            for check in made_pipes:
+                if(check.img_index > 7) and (check.img_index < 15):
+                    made_pipes[check.location - 1].pipe_connected = False
+                    made_pipes[check.location - 1].img_index -= 7
+                    check.configure(image = pipe_image_list[check.img_index - 1])
     
 #call this class when a game is won
 class Candy():
@@ -881,7 +888,7 @@ window.title("The Plaque Pursuers")
 p = Canvas(window)
 p.pack(expand = 1, fill = BOTH)
 
-#calls the images for the pipe game after the canvas is created
+#calls the images for the pipe game after the canvas is created as a global variable
 pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "images/Pipe2.png"), \
                    PhotoImage(file = "images/Pipe3.png"), PhotoImage(file = "images/Pipe4.png"), \
                    PhotoImage(file = "images/Pipe5.png"), PhotoImage(file = "images/Pipe6.png"), \
