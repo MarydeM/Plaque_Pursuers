@@ -431,6 +431,7 @@ class Pipes():
         flow = Game_Gui(18, -50, False, Flow, 450, 30)
 
     def setup_game(self):
+        #if the pipes reach the goal pipe_win will be set to true
         global pipe_win
         pipe_win = False
         #set the variables for the pipe game:
@@ -441,8 +442,8 @@ class Pipes():
         #1==vertical, 2==horizontal, 3==down to right,4==up to right, 5==left to up, 6==left to down,
         #7==up to down and left to right.
         Possible_Pipes = [1, 2, 3, 4, 5, 6, 7]
-        #there will be 9 possible boards to use as a base
-        Boards = [1, 2, 3, 4, 5]
+        #there will be a number of possible boards to use as a base
+        Boards = [1, 2, 3]
         #location == where on the 5x7 board the button is
         location = 1
         #randomly choose a board to use as a base
@@ -455,7 +456,6 @@ class Pipes():
                 PipeChoice = random.choice(Possible_Pipes)
                 #button is created with the image index being put into the game_gui
                 #if the board is board1, create this board
-                board_choice = 1
                 if(board_choice == 1):
                     #draw specific pattern
                     if(location <= 2):
@@ -485,17 +485,44 @@ class Pipes():
                     #fill rest
                     else:
                         Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
+                #2nd board choice
                 elif(board_choice == 2):
-                    pass
+                    if(location == 1):
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 7) or (location == 8):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location <= 13) and (location >= 10):
+                        Button = Game_Gui(4, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location <= 21) and (location >= 16):
+                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 9):
+                        Button = Game_Gui(7, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 14):
+                        Button = Game_Gui(2, location, False, flip_pipe, pos_x, pos_y)
+                    #fill rest
+                    else:
+                        Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
+                #board option #3
                 elif(board_choice == 3):
-                    pass
-                elif(board_choice == 4):
-                    pass
-                elif(board_choice == 5):
-                    pass
-                #fallback
-                else:
-                    Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
+                    if(location == 1):
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 7):
+                        Button = Game_Gui(7, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 8):
+                        Button = Game_Gui(6, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location <= 21) and (location >= 16):
+                        Button = Game_Gui(5, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 9):
+                        Button = Game_Gui(7, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 14):
+                        Button = Game_Gui(1, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location == 24):
+                        Button = Game_Gui(7, location, False, flip_pipe, pos_x, pos_y)
+                    elif(location >= 25) and (location <= 27):
+                        Button = Game_Gui(3, location, False, flip_pipe, pos_x, pos_y)
+                    #fill rest
+                    else:
+                        Button = Game_Gui(PipeChoice, location, False, flip_pipe, pos_x, pos_y)
                 #increases the location in the grid by one
                 location += 1
                 #moves x cord by 75 for next x
@@ -588,9 +615,11 @@ def Flow(button):
         #go through the for loop every time a button is pressed to know if a true statement needs to change
         for check in made_pipes:
             if(check.location == 7):
+                #if pipe below
                 if(made_pipes[check.location + 6].img_index == 8) or \
                     (made_pipes[check.location + 6].img_index == 12) or \
                     (made_pipes[check.location + 6].img_index == 14):
+                    #if current pipe can take from below
                     if(made_pipes[check.location - 1].img_index == 2) or \
                         (made_pipes[check.location - 1].img_index == 9) or \
                         (made_pipes[check.location - 1].img_index == 3) or \
@@ -600,6 +629,29 @@ def Flow(button):
                         #skip if already won
                         if(pipe_win == True): 
                             break
+                        made_pipes[check.location - 1].pipe_connected == True
+                        check.img_index += 7
+                        check.configure(image = pipe_image_list[check.img_index - 1])
+                        pipe_win = True
+                        #index 37 is the final button
+                        made_pipes[35].img_index = 16
+                        made_pipes[35].configure(image = pipe_image_list[made_pipes[35].img_index - 1])
+                        print("You win")
+                        #break out of loop if you win
+                        break
+                #if pipe to the left
+                if(made_pipes[check.location - 2].img_index == 9) or \
+                    (made_pipes[check.location - 2].img_index == 10) or \
+                    (made_pipes[check.location - 2].img_index == 14):
+                    #if current pipe can take from left
+                    if(made_pipes[check.location - 1].img_index == 2) or \
+                        (made_pipes[check.location - 1].img_index == 9) or \
+                        (made_pipes[check.location - 1].img_index == 7) or \
+                        (made_pipes[check.location - 1].img_index == 14):
+                        #skip if already won
+                        if(pipe_win == True): 
+                            break
+                        made_pipes[check.location - 1].pipe_connected == True
                         check.img_index += 7
                         check.configure(image = pipe_image_list[check.img_index - 1])
                         pipe_win = True
