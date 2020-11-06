@@ -233,7 +233,6 @@ class Memory():
     
 
     def __init__(self):
-        window.title("The Plaque Pursuers: Memory Game")
         self.delete_buttons()
         #makes a list to contain all labels made
         global labels
@@ -420,7 +419,8 @@ class Pipes():
                    PhotoImage(file = "images/Pipe4_light.png"), PhotoImage(file = "images/Pipe5_light.png"), \
                    PhotoImage(file = "images/Pipe6_light.png"), PhotoImage(file = "images/Pipe7_light.png"), \
                    PhotoImage(file = "images/sink.png"), PhotoImage(file = "images/sink_light.png"), \
-                   PhotoImage(file = "images/flow.png"), PhotoImage(file = "images/start_flow.png")]
+                   PhotoImage(file = "images/flow.png"), PhotoImage(file = "images/start_flow.png"), \
+                           PhotoImage(file = "images/back_to_menu.png")]
         self.delete_buttons()
         self.make_buttons()
     
@@ -587,35 +587,6 @@ def flip_pipe(button):
             button.configure(image = pipe_image_list[button.img_index - 1])
         elif(button.img_index == 6):
             button.img_index = 3
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        #These are pipes with flow
-        if(button.img_index == 8):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 2 
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 9):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 1
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 10):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 4
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 11):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 5
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 12):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 6
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 13):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 3
-            button.configure(image = pipe_image_list[button.img_index - 1])
-        elif(button.img_index == 14):
-            made_pipes[button.location - 1].pipe_connected = False
-            button.img_index = 7
             button.configure(image = pipe_image_list[button.img_index - 1])
 
 #the flow button will activate this function
@@ -865,12 +836,15 @@ def Flow(button):
                     made_pipes[check.location - 1].pipe_connected = False
             except:
                 pass
-    #have a slight pause before flow stops
     window.update()
-    sleep(1.5)
     #the game is won at this point! dispense candy
     if(pipe_win == True):
-        print("dispensing candy\nThe only thing you can do now is return to menu")
+        #have a slight pause here
+        sleep(0.5)
+        #show that the player is returning to menu
+        returning = Game_Gui(19, -60, False, flip_pipe, 400, 240)
+        window.update()
+        print("dispensing candy")
         Candy()
         #wait 5 seconds after winning before returning to menu
         sleep(5)
@@ -881,6 +855,8 @@ def Flow(button):
         Pipes().back_menu()
     #if the game is not over, change back to regular pipes
     if(pipe_win == False):
+        #have a slight pause before cleaning up
+        sleep(1.5)
         #for loop, clean up any flow if game not over
         for number in range(0, 6):
             for check in made_pipes:
