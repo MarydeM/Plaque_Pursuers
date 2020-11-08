@@ -3,8 +3,6 @@
 # Last Updated: 11/05/2020
 ##############################################################################
 
-### the three pound signs means it is a note to delete later ###
-
 #Imports libraries
 import functools
 from tkinter import *
@@ -83,12 +81,7 @@ class Gui(Canvas):
         button.place(x = self.xcoord, y = self.ycoord, anchor = "center")
         # adds the newly created button to a list
         button_list.append(button)
-        
-    ### Is this still a WIP? ###
-    def changeImg(self, img):
-        pass
 
-###This needs to be moved to the Gui class, we need to add a image_index to ever other button as well###
 class Game_Gui(Canvas):
     
     #main Frame Constructor
@@ -160,7 +153,7 @@ class Game_Gui(Canvas):
     def name(self, value):            
         self._name = value
         
-    # sets up indovidual buttons
+    # sets up indovidual buttons for the pipe puzzle
     def setup_Pipe_GUI(self):
         img = pipe_image_list[self.img_index - 1]
         #creates button and gives it functionality
@@ -190,7 +183,6 @@ class MainMenu():
     def __init__(self):
         self.delete_buttons()
         self.make_buttons()
-        window.title("The Plaque Pursuers")
     
     #creates buttons
     def make_buttons(self):
@@ -231,7 +223,6 @@ class MainMenu():
 #Plays the card matching memory game
 class Memory():
     
-
     def __init__(self):
         self.delete_buttons()
         #makes a list to contain all labels made
@@ -410,6 +401,7 @@ class Memory():
 class Pipes():
     
     def __init__(self):
+        #sets up image list to be used for the Pipe puzzle
         global pipe_image_list
         pipe_image_list = [PhotoImage(file = "images/Pipe1.png"), PhotoImage(file = "images/Pipe2.png"), \
                    PhotoImage(file = "images/Pipe3.png"), PhotoImage(file = "images/Pipe4.png"), \
@@ -421,6 +413,7 @@ class Pipes():
                    PhotoImage(file = "images/sink.png"), PhotoImage(file = "images/sink_light.png"), \
                    PhotoImage(file = "images/flow.png"), PhotoImage(file = "images/start_flow.png"), \
                            PhotoImage(file = "images/back_to_menu.png")]
+        #clear the main menu and create the pipe game
         self.delete_buttons()
         self.make_buttons()
     
@@ -452,7 +445,8 @@ class Pipes():
         #1==vertical, 2==horizontal, 3==down to right,4==up to right, 5==left to up, 6==left to down,
         #7==up to down and left to right.
         Possible_Pipes = [1, 2, 3, 4, 5, 6, 7]
-        #there will be a number of possible boards to use as a base
+        #there will be a number of possible boards to use as a base, to ensure there is at least
+        #one valid path to the sink
         Boards = [1, 2, 3]
         #location == where on the 5x7 board the button is
         location = 1
@@ -467,7 +461,6 @@ class Pipes():
                 #button is created with the image index being put into the game_gui
                 #if the board is board1, create this board
                 if(board_choice == 1):
-                    #draw specific pattern
                     if(location <= 2):
                         Button = Game_Gui(1, location, False, flip_pipe, pos_x, pos_y)
                     elif(location == 3):
@@ -539,8 +532,6 @@ class Pipes():
                 pos_x += 75
             #moves y cord by 75 for next y
             pos_y += 75
-        ###at the end create the timer widget
-        pass
 
     #return to main menu if back button is pressed
     def back_menu(self):
@@ -562,6 +553,7 @@ class Pipes():
 
 #flip button will be outside class so that button can be passed in
 def flip_pipe(button):
+    #if the game is won, do not allow for the pipes to be clicked
     global pipe_win
     if(pipe_win == False):
         #the image index is one above the actual number in the index!!
@@ -569,22 +561,28 @@ def flip_pipe(button):
         #end goal/the sink, does nothing when pressed
         if(button.location == 40):
             return
-        #These are pipes with no flow
+        #if a pipe is clicked, the image will change to the roatated pipe
+        #vertical to horiontal
         if(button.img_index == 1):
             button.img_index = 2 
             button.configure(image = pipe_image_list[button.img_index - 1])
+        #horizontal to vertical
         elif(button.img_index == 2):
             button.img_index = 1
             button.configure(image = pipe_image_list[button.img_index - 1])
+        #S and E to N and E
         elif(button.img_index == 3):
             button.img_index = 4
             button.configure(image = pipe_image_list[button.img_index - 1])
+        #N and E to N and W
         elif(button.img_index == 4):
             button.img_index = 5
             button.configure(image = pipe_image_list[button.img_index - 1])
+        #N and W to S and W
         elif(button.img_index == 5):
             button.img_index = 6
             button.configure(image = pipe_image_list[button.img_index - 1])
+        #S and W back to S and E
         elif(button.img_index == 6):
             button.img_index = 3
             button.configure(image = pipe_image_list[button.img_index - 1])
@@ -836,8 +834,9 @@ def Flow(button):
                     made_pipes[check.location - 1].pipe_connected = False
             except:
                 pass
+    #after updating all the pipes
     window.update()
-    #the game is won at this point! dispense candy
+    #check if game is won, and if so dispense candy
     if(pipe_win == True):
         #have a slight pause here
         sleep(0.5)
@@ -853,7 +852,7 @@ def Flow(button):
         p.delete(rect)
         #return to Menu
         Pipes().back_menu()
-    #if the game is not over, change back to regular pipes
+    #if the game is not over, change back to regular pipes so the game can continue
     if(pipe_win == False):
         #have a slight pause before cleaning up
         sleep(1.5)
@@ -909,11 +908,11 @@ class Candy():
 ################
 #will keep a list of created buttons to make them easier to delete
 button_list = []
-#list of created pipes for the pipe
+#list of created pipes for the pipe puzzle
 made_pipes = []
 
 #window resolution
-#800x600 is Fullscreen on a rasp. pi
+#800x480 is Fullscreen on a rasp. pi
 WIDTH, HEIGHT = 800, 480
 
 # create the window
@@ -921,9 +920,8 @@ window = Tk()
 #set the window WIDTHxHEIGHT
 window.geometry("{}x{}".format(WIDTH, HEIGHT))
 # set the window title
-window.title("The Plaque Pursuers")
+window.title("The Plaque Pursuit")
 
-###generating the gui covers up the b.ackground. Fix needed
 # generate the GUI
 p = Canvas(window)
 p.pack(expand = 1, fill = BOTH)
