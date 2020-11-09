@@ -285,21 +285,21 @@ class Memory():
         for i in range (6):
             #assigns an image to the front of the card with the same name
             #and location
-            self.assign_images(card_names[j], from_edge, 90)
+            self.assign_images(card_names[j], from_edge, 80)
             #creates buttons with unique names to denote their location
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j]), from_edge, 90, card_names[j])
-            self.assign_images(card_names[j + 1], from_edge, 245)
+                        card_names[j]), from_edge, 80, card_names[j])
+            self.assign_images(card_names[j + 1], from_edge, 235)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 1]), from_edge, 245, card_names[j + 1])
-            self.assign_images(card_names[j + 2], from_edge, 400)
+                        card_names[j + 1]), from_edge, 235, card_names[j + 1])
+            self.assign_images(card_names[j + 2], from_edge, 390)
             Gui("images/card_back.png", functools.partial(self.flip, \
-                        card_names[j + 2]), from_edge, 400, card_names[j + 2])
+                        card_names[j + 2]), from_edge, 390, card_names[j + 2])
             #adds card names and location in list, x coordinate, and y 
             #coordinate to the dictionary
-            cards[card_names[j]] = [j, from_edge, 90]
-            cards[card_names[j + 1]] = [j + 1, from_edge, 245]
-            cards[card_names[j + 2]] = [j + 2, from_edge, 400]
+            cards[card_names[j]] = [j, from_edge, 80]
+            cards[card_names[j + 1]] = [j + 1, from_edge, 235]
+            cards[card_names[j + 2]] = [j + 2, from_edge, 390]
             #iterates the x axis
             from_edge += 108
             #iterates card location
