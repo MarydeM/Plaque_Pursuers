@@ -840,14 +840,14 @@ def Flow(button):
     #the game is won at this point! dispense candy
     if(pipe_win == True):
         #have a slight pause here
-        sleep(0.5)
+        print("dispensing candy")
+        Candy.dispense()
+        sleep(3)
         #show that the player is returning to menu
         returning = Game_Gui(19, -60, False, flip_pipe, 400, 240)
         window.update()
-        print("dispensing candy")
-        Candy.dispense()
         #wait 5 seconds after winning before returning to menu
-        sleep(5)
+        sleep(2)
         #delete the rectangle
         global rect
         p.delete(rect)
@@ -867,6 +867,7 @@ def Flow(button):
     
 #call this class when a game is won
 class Candy():
+    
     def dispense():
         if gpio_on == False:
             pass
